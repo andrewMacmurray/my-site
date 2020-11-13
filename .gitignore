@@ -3,4 +3,5 @@ elm-stuff/
 dist/
 .cache/
 gen/
+.idea
 

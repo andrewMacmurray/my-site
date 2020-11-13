@@ -1,4 +1,4 @@
-module Index exposing (view)
+module Page.BlogIndex exposing (view)
 
 import Data.Author
 import Date
@@ -11,24 +11,18 @@ import Pages.PagePath as PagePath exposing (PagePath)
 
 
 type alias PostEntry =
-    ( PagePath Pages.PathKey, Metadata.ArticleMetadata )
+    ( PagePath Pages.PathKey
+    , Metadata.ArticleMetadata
+    )
 
 
-view :
-    List ( PagePath Pages.PathKey, Metadata )
-    -> Element msg
+view : List ( PagePath Pages.PathKey, Metadata ) -> Element msg
 view posts =
     Element.column [ Element.spacing 20 ]
         (posts
             |> List.filterMap
                 (\( path, metadata ) ->
                     case metadata of
-                        Metadata.Page meta ->
-                            Nothing
-
-                        Metadata.Author _ ->
-                            Nothing
-
                         Metadata.Article meta ->
                             if meta.draft then
                                 Nothing
@@ -36,7 +30,7 @@ view posts =
                             else
                                 Just ( path, meta )
 
-                        Metadata.BlogIndex ->
+                        _ ->
                             Nothing
                 )
             |> List.sortWith postPublishDateDescending
@@ -67,7 +61,6 @@ title text =
         |> Element.paragraph
             [ Element.Font.size 36
             , Element.Font.center
-            , Element.Font.family [ Element.Font.typeface "Raleway" ]
             , Element.Font.semiBold
             , Element.padding 16
             ]
@@ -115,7 +108,7 @@ postPreview post =
             [ Data.Author.view [ Element.width (Element.px 40) ] post.author
             , Element.text post.author.name
             , Element.text "•"
-            , Element.text (post.published |> Date.format "MMMM ddd, yyyy")
+            , Element.text (Date.format "MMMM ddd, yyyy" post.published)
             ]
         , post.description
             |> Element.text
@@ -123,7 +116,6 @@ postPreview post =
             |> Element.paragraph
                 [ Element.Font.size 22
                 , Element.Font.center
-                , Element.Font.family [ Element.Font.typeface "Raleway" ]
                 ]
         , readMoreLink
         ]

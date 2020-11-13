@@ -7,19 +7,9 @@ import Rss
 
 
 fileToGenerate :
-    { siteTagline : String
-    , siteUrl : String
-    }
-    ->
-        List
-            { path : PagePath Pages.PathKey
-            , frontmatter : Metadata
-            , body : String
-            }
-    ->
-        { path : List String
-        , content : String
-        }
+    { siteTagline : String, siteUrl : String }
+    -> List { path : PagePath Pages.PathKey, frontmatter : Metadata, body : String }
+    -> { path : List String, content : String }
 fileToGenerate config siteMetadata =
     { path = [ "blog", "feed.xml" ]
     , content = generate config siteMetadata
@@ -27,15 +17,8 @@ fileToGenerate config siteMetadata =
 
 
 generate :
-    { siteTagline : String
-    , siteUrl : String
-    }
-    ->
-        List
-            { path : PagePath Pages.PathKey
-            , frontmatter : Metadata
-            , body : String
-            }
+    { siteTagline : String, siteUrl : String }
+    -> List { path : PagePath Pages.PathKey, frontmatter : Metadata, body : String }
     -> String
 generate { siteTagline, siteUrl } siteMetadata =
     Rss.generate
@@ -49,12 +32,7 @@ generate { siteTagline, siteUrl } siteMetadata =
         }
 
 
-metadataToRssItem :
-    { path : PagePath Pages.PathKey
-    , frontmatter : Metadata
-    , body : String
-    }
-    -> Maybe Rss.Item
+metadataToRssItem : { path : PagePath Pages.PathKey, frontmatter : Metadata, body : String } -> Maybe Rss.Item
 metadataToRssItem page =
     case page.frontmatter of
         Article article ->

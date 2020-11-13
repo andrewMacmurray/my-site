@@ -1,4 +1,10 @@
-module Metadata exposing (ArticleMetadata, Metadata(..), PageMetadata, decoder)
+module Metadata exposing
+    ( ArticleMetadata
+    , HomeMetadata
+    , Metadata(..)
+    , PageMetadata
+    , decoder
+    )
 
 import Data.Author
 import Date exposing (Date)
@@ -12,6 +18,7 @@ type Metadata
     = Page PageMetadata
     | Article ArticleMetadata
     | Author Data.Author.Author
+    | Home HomeMetadata
     | BlogIndex
 
 
@@ -29,15 +36,23 @@ type alias PageMetadata =
     { title : String }
 
 
+type alias HomeMetadata =
+    { blurb : String }
+
+
 decoder : Decoder Metadata
 decoder =
     Decode.field "type" Decode.string
         |> Decode.andThen
             (\pageType ->
                 case pageType of
+                    "home" ->
+                        Decode.field "blurb" Decode.string
+                            |> Decode.map (HomeMetadata >> Home)
+
                     "page" ->
                         Decode.field "title" Decode.string
-                            |> Decode.map (\title -> Page { title = title })
+                            |> Decode.map (PageMetadata >> Page)
 
                     "blog-index" ->
                         Decode.succeed BlogIndex
@@ -100,9 +115,4 @@ imageDecoder =
 
 findMatchingImage : String -> Maybe (ImagePath Pages.PathKey)
 findMatchingImage imageAssetPath =
-    Pages.allImages
-        |> List.Extra.find
-            (\image ->
-                ImagePath.toString image
-                    == imageAssetPath
-            )
+    Pages.allImages |> List.Extra.find (\image -> ImagePath.toString image == imageAssetPath)

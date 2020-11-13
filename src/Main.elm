@@ -1,15 +1,17 @@
 module Main exposing (main)
 
+import Browser.Dom as Dom exposing (Viewport)
+import Browser.Events
 import Color
 import Data.Author as Author
 import Date
-import Element exposing (Element)
+import Element exposing (..)
 import Element.Font as Font
+import Element.Text as Text
 import Feed
 import Head
 import Head.Seo as Seo
 import Html exposing (Html)
-import Index
 import Json.Decode
 import Layout
 import Markdown.Parser
@@ -17,13 +19,15 @@ import Markdown.Renderer
 import Metadata exposing (Metadata)
 import MySitemap
 import Page.Article
+import Page.BlogIndex as BlogIndex
+import Page.Home as Home
 import Pages exposing (images, pages)
 import Pages.Manifest as Manifest
 import Pages.Manifest.Category
 import Pages.PagePath exposing (PagePath)
 import Pages.Platform
 import Pages.StaticHttp as StaticHttp
-import Palette
+import Task
 
 
 manifest : Manifest.Config Pages.PathKey
@@ -47,18 +51,13 @@ type alias Rendered =
     Element Msg
 
 
-
--- the intellij-elm plugin doesn't support type aliases for Programs so we need to use this line
--- main : Platform.Program Pages.Platform.Flags (Pages.Platform.Model Model Msg Metadata Rendered) (Pages.Platform.Msg Msg Metadata Rendered)
-
-
 main : Pages.Platform.Program Model Msg Metadata Rendered Pages.PathKey
 main =
     Pages.Platform.init
-        { init = \_ -> init
+        { init = always init
         , view = view
         , update = update
-        , subscriptions = subscriptions
+        , subscriptions = always (always subscriptions)
         , documents = [ markdownDocument ]
         , manifest = manifest
         , canonicalSiteUrl = canonicalSiteUrl
@@ -75,20 +74,14 @@ generateFiles :
         , frontmatter : Metadata
         , body : String
         }
-    ->
-        StaticHttp.Request
-            (List
-                (Result String
-                    { path : List String
-                    , content : String
-                    }
-                )
-            )
+    -> StaticHttp.Request (List (Result String { path : List String, content : String }))
 generateFiles siteMetadata =
     StaticHttp.succeed
-        [ Feed.fileToGenerate { siteTagline = siteTagline, siteUrl = canonicalSiteUrl } siteMetadata |> Ok
-        , MySitemap.build { siteUrl = canonicalSiteUrl } siteMetadata |> Ok
-        ]
+        (List.map Ok
+            [ Feed.fileToGenerate { siteTagline = siteTagline, siteUrl = canonicalSiteUrl } siteMetadata
+            , MySitemap.build { siteUrl = canonicalSiteUrl } siteMetadata
+            ]
+        )
 
 
 markdownDocument : { extension : String, metadata : Json.Decode.Decoder Metadata, body : String -> Result error (Element msg) }
@@ -97,50 +90,58 @@ markdownDocument =
     , metadata = Metadata.decoder
     , body =
         \markdownBody ->
-            -- Html.div [] [ Markdown.toHtml [] markdownBody ]
             Markdown.Parser.parse markdownBody
                 |> Result.withDefault []
                 |> Markdown.Renderer.render Markdown.Renderer.defaultHtmlRenderer
                 |> Result.withDefault [ Html.text "" ]
                 |> Html.div []
-                |> Element.html
+                |> html
                 |> List.singleton
-                |> Element.paragraph [ Element.width Element.fill ]
+                |> paragraph [ width fill ]
                 |> Ok
     }
 
 
 type alias Model =
-    {}
+    { screenHeight : Float }
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( Model, Cmd.none )
+    ( initialModel
+    , Task.perform ViewportReceived Dom.getViewport
+    )
 
 
-type alias Msg =
-    ()
+initialModel : Model
+initialModel =
+    { screenHeight = 0
+    }
+
+
+type Msg
+    = ViewportReceived Viewport
+    | ScreenResized Int
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        () ->
-            ( model, Cmd.none )
+        ViewportReceived vp ->
+            ( { model | screenHeight = vp.viewport.height }, Cmd.none )
+
+        ScreenResized h ->
+            ( { model | screenHeight = toFloat h }, Cmd.none )
 
 
---subscriptions : Model -> Sub Msg
-subscriptions _ _ _ =
-    Sub.none
+subscriptions : Model -> Sub Msg
+subscriptions _ =
+    Browser.Events.onResize (always ScreenResized)
 
 
 view :
     List ( PagePath Pages.PathKey, Metadata )
-    ->
-        { path : PagePath Pages.PathKey
-        , frontmatter : Metadata
-        }
+    -> { path : PagePath Pages.PathKey, frontmatter : Metadata }
     ->
         StaticHttp.Request
             { view : Model -> Rendered -> { title : String, body : Html Msg }
@@ -148,9 +149,7 @@ view :
             }
 view siteMetadata page =
     StaticHttp.succeed
-        { view =
-            \model viewForPage ->
-                Layout.view (pageView model siteMetadata page viewForPage) page
+        { view = \model viewForPage -> Layout.view (pageView model siteMetadata page viewForPage) page
         , head = head page.frontmatter
         }
 
@@ -165,13 +164,7 @@ pageView model siteMetadata page viewForPage =
     case page.frontmatter of
         Metadata.Page metadata ->
             { title = metadata.title
-            , body =
-                [ viewForPage
-                ]
-
-            --        |> Element.textColumn
-            --            [ Element.width Element.fill
-            --            ]
+            , body = [ viewForPage ]
             }
 
         Metadata.Article metadata ->
@@ -180,17 +173,20 @@ pageView model siteMetadata page viewForPage =
         Metadata.Author author ->
             { title = author.name
             , body =
-                [ Palette.blogHeading author.name
+                [ Text.headline author.name
                 , Author.view [] author
-                , Element.paragraph [ Element.centerX, Font.center ] [ viewForPage ]
+                , paragraph [ centerX, Font.center ] [ viewForPage ]
                 ]
             }
 
         Metadata.BlogIndex ->
             { title = "elm-pages blog"
-            , body =
-                [ Element.column [ Element.padding 20, Element.centerX ] [ Index.view siteMetadata ]
-                ]
+            , body = [ column [ centerX ] [ BlogIndex.view siteMetadata ] ]
+            }
+
+        Metadata.Home meta ->
+            { title = "elm-pages"
+            , body = [ column [ centerX ] [ Home.view model.screenHeight meta ] ]
             }
 
 
@@ -199,16 +195,6 @@ commonHeadTags =
     [ Head.rssLink "/blog/feed.xml"
     , Head.sitemapLink "/sitemap.xml"
     ]
-
-
-
-{- Read more about the metadata specs:
-
-   <https://developer.twitter.com/en/docs/tweets/optimize-with-cards/overview/abouts-cards>
-   <https://htmlhead.dev>
-   <https://html.spec.whatwg.org/multipage/semantics.html#standard-metadata-names>
-   <https://ogp.me/>
--}
 
 
 head : Metadata -> List (Head.Tag Pages.PathKey)
@@ -287,6 +273,22 @@ head metadata =
                             , lastName = lastName
                             , username = Nothing
                             }
+
+                Metadata.Home _ ->
+                    Seo.summaryLarge
+                        { canonicalUrlOverride = Nothing
+                        , siteName = "elm-pages"
+                        , image =
+                            { url = images.iconPng
+                            , alt = "elm-pages logo"
+                            , dimensions = Nothing
+                            , mimeType = Nothing
+                            }
+                        , description = siteTagline
+                        , locale = Nothing
+                        , title = "elm-pages"
+                        }
+                        |> Seo.website
 
                 Metadata.BlogIndex ->
                     Seo.summaryLarge
