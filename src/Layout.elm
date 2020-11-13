@@ -48,7 +48,10 @@ layoutWrapper : Element msg -> Html msg
 layoutWrapper =
     Element.layout
         [ width fill
-        , Font.family [ Font.typeface "Roboto Mono" ]
+        , Font.family
+            [ Font.typeface "Roboto Mono"
+            , Font.typeface "monospace"
+            ]
         , Font.color (rgba255 0 0 0 0.8)
         ]
 
