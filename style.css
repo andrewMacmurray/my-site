@@ -15,7 +15,7 @@
 }
 
 .f4 {
-  font-size: 16px !important;
+  font-size: 14px !important;
 }
 
 .f5 {
@@ -25,6 +25,10 @@
 @media (min-width: 1000px) {
   .f1 {
     font-size: 50px !important;
+  }
+
+  .f4 {
+    font-size: 16px !important;
   }
 }
 

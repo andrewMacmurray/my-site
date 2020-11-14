@@ -18,7 +18,7 @@ view_ content screenHeight =
         , style "animation" "fade-in 0.3s both"
         ]
         [ column
-            [ paddingEach { edges | top = (round screenHeight // 5) - Scale.medium }
+            [ paddingEach { edges | top = Scale.extraLarge }
             , spacing Scale.extraLarge
             ]
             [ Text.headline [] "Hi I'm Andrew"

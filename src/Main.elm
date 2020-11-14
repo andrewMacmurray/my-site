@@ -37,7 +37,7 @@ manifest =
     , orientation = Manifest.Portrait
     , description = "elm-pages-starter - A statically typed site generator."
     , iarcRatingId = Nothing
-    , name = "elm-pages-starter"
+    , name = "andrew-macmurray"
     , themeColor = Just Color.white
     , startUrl = pages.index
     , shortName = Just "elm-pages-starter"
@@ -174,7 +174,7 @@ pageView model siteMetadata page viewForPage =
             }
 
         Metadata.Home ->
-            { title = "elm-pages"
+            { title = "andrew-macmurray"
             , body = [ column [ centerX ] [ Home.view viewForPage model.screenHeight ] ]
             }
 
@@ -193,7 +193,7 @@ head metadata =
                 Metadata.Page meta ->
                     Seo.summaryLarge
                         { canonicalUrlOverride = Nothing
-                        , siteName = "elm-pages-starter"
+                        , siteName = siteName
                         , image =
                             { url = images.iconPng
                             , alt = "elm-pages logo"
@@ -209,7 +209,7 @@ head metadata =
                 Metadata.Article meta ->
                     Seo.summaryLarge
                         { canonicalUrlOverride = Nothing
-                        , siteName = "elm-pages starter"
+                        , siteName = siteName
                         , image =
                             { url = meta.image
                             , alt = meta.description
@@ -246,7 +246,7 @@ head metadata =
                     in
                     Seo.summary
                         { canonicalUrlOverride = Nothing
-                        , siteName = "elm-pages-starter"
+                        , siteName = siteName
                         , image =
                             { url = meta.avatar
                             , alt = meta.name ++ "'s elm-pages articles."
@@ -266,7 +266,7 @@ head metadata =
                 Metadata.Home ->
                     Seo.summaryLarge
                         { canonicalUrlOverride = Nothing
-                        , siteName = "elm-pages"
+                        , siteName = siteName
                         , image =
                             { url = images.iconPng
                             , alt = "elm-pages logo"
@@ -282,7 +282,7 @@ head metadata =
                 Metadata.BlogIndex ->
                     Seo.summaryLarge
                         { canonicalUrlOverride = Nothing
-                        , siteName = "elm-pages"
+                        , siteName = siteName
                         , image =
                             { url = images.iconPng
                             , alt = "elm-pages logo"
@@ -304,4 +304,9 @@ canonicalSiteUrl =
 
 siteTagline : String
 siteTagline =
-    "Starter blog for elm-pages"
+    "Andrew MacMurray"
+
+
+siteName : String
+siteName =
+    "andrew-macmurray"
