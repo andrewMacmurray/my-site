@@ -30,10 +30,10 @@ layout : { a | body : List (Element msg) } -> { b | path : PagePath Pages.PathKe
 layout document page =
     layoutWrapper
         (column
-            [ width fill ]
+            [ width fill, spacing Scale.large ]
             [ header page.path
             , column
-                [ paddingXY Scale.small 0
+                [ paddingXY Scale.medium 0
                 , spacing Scale.large
                 , Region.mainContent
                 , width (fill |> maximum 800)
