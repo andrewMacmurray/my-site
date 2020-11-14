@@ -7,6 +7,7 @@ import Data.Author as Author
 import Date
 import Element exposing (..)
 import Element.Font as Font
+import Element.Markdown as Markdown
 import Element.Text as Text
 import Feed
 import Head
@@ -14,8 +15,6 @@ import Head.Seo as Seo
 import Html exposing (Html)
 import Json.Decode
 import Layout
-import Markdown.Parser
-import Markdown.Renderer
 import Metadata exposing (Metadata)
 import MySitemap
 import Page.Article
@@ -88,17 +87,7 @@ markdownDocument : { extension : String, metadata : Json.Decode.Decoder Metadata
 markdownDocument =
     { extension = "md"
     , metadata = Metadata.decoder
-    , body =
-        \markdownBody ->
-            Markdown.Parser.parse markdownBody
-                |> Result.withDefault []
-                |> Markdown.Renderer.render Markdown.Renderer.defaultHtmlRenderer
-                |> Result.withDefault [ Html.text "" ]
-                |> Html.div []
-                |> html
-                |> List.singleton
-                |> paragraph [ width fill ]
-                |> Ok
+    , body = Markdown.view >> Ok
     }
 
 
@@ -173,7 +162,7 @@ pageView model siteMetadata page viewForPage =
         Metadata.Author author ->
             { title = author.name
             , body =
-                [ Text.headline author.name
+                [ Text.headline [] author.name
                 , Author.view [] author
                 , paragraph [ centerX, Font.center ] [ viewForPage ]
                 ]
@@ -184,9 +173,9 @@ pageView model siteMetadata page viewForPage =
             , body = [ column [ centerX ] [ BlogIndex.view siteMetadata ] ]
             }
 
-        Metadata.Home meta ->
+        Metadata.Home ->
             { title = "elm-pages"
-            , body = [ column [ centerX ] [ Home.view model.screenHeight meta ] ]
+            , body = [ column [ centerX ] [ Home.view viewForPage model.screenHeight ] ]
             }
 
 
@@ -274,7 +263,7 @@ head metadata =
                             , username = Nothing
                             }
 
-                Metadata.Home _ ->
+                Metadata.Home ->
                     Seo.summaryLarge
                         { canonicalUrlOverride = Nothing
                         , siteName = "elm-pages"

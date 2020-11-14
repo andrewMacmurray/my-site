@@ -1,5 +1,6 @@
 ---
-title: elm-pages-starter
+title: Andrew MacMurray
 type: home
-blurb: I’m a software developer working at 8th Light. I love programming (especially functional programming), and I love building things that make people feel happy or less stressed.
 ---
+
+I’m a software developer working at [8th Light](https://8thlight.com/). I love programming - especially **functional programming**. I'm passionate about **clean code** and building software that makes people feel happy or less stressed.

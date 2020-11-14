@@ -27,7 +27,7 @@ view metadata viewForPage =
                 ]
             ]
         , publishedDateView metadata |> Element.el [ Font.size 16, Font.color (Element.rgba255 0 0 0 0.6) ]
-        , Text.headline metadata.title
+        , Text.headline [] metadata.title
         , articleImageView metadata.image
         , viewForPage
         ]

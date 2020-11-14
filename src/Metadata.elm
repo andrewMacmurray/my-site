@@ -1,6 +1,5 @@
 module Metadata exposing
     ( ArticleMetadata
-    , HomeMetadata
     , Metadata(..)
     , PageMetadata
     , decoder
@@ -18,7 +17,7 @@ type Metadata
     = Page PageMetadata
     | Article ArticleMetadata
     | Author Data.Author.Author
-    | Home HomeMetadata
+    | Home
     | BlogIndex
 
 
@@ -36,10 +35,6 @@ type alias PageMetadata =
     { title : String }
 
 
-type alias HomeMetadata =
-    { blurb : String }
-
-
 decoder : Decoder Metadata
 decoder =
     Decode.field "type" Decode.string
@@ -47,8 +42,7 @@ decoder =
             (\pageType ->
                 case pageType of
                     "home" ->
-                        Decode.field "blurb" Decode.string
-                            |> Decode.map (HomeMetadata >> Home)
+                        Decode.succeed Home
 
                     "page" ->
                         Decode.field "title" Decode.string

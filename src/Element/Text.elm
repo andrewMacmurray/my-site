@@ -2,6 +2,7 @@ module Element.Text exposing
     ( headline
     , subtitle
     , text
+    , title
     )
 
 import Element exposing (Attribute, Element, centerX)
@@ -11,20 +12,42 @@ import Element.Region as Region
 import Utils.Element exposing (class)
 
 
-headline : String -> Element msg
-headline content =
+headline : List (Attribute msg) -> String -> Element msg
+headline attrs content =
     Element.el
-        [ class "f1"
-        , centerX
-        , Region.heading 1
-        , Font.color Palette.grey
-        ]
+        (List.append
+            [ class "f1"
+            , centerX
+            , Region.heading 1
+            , Font.color Palette.grey
+            ]
+            attrs
+        )
+        (Element.text content)
+
+
+title : List (Attribute msg) -> String -> Element msg
+title attrs content =
+    Element.el
+        (List.append
+            [ class "f2"
+            , Region.heading 2
+            ]
+            attrs
+        )
         (Element.text content)
 
 
 subtitle : List (Attribute msg) -> String -> Element msg
 subtitle attrs content =
-    Element.el (List.append [ class "f3", Region.heading 3 ] attrs) (Element.text content)
+    Element.el
+        (List.append
+            [ class "f3"
+            , Region.heading 3
+            ]
+            attrs
+        )
+        (Element.text content)
 
 
 text : List (Attribute msg) -> String -> Element msg

@@ -51,3 +51,14 @@
     opacity: 1;
   }
 }
+
+.bold-override div div {
+  font-weight: bold;
+  color: rgb(56, 58, 60);
+}
+
+.link-override div div {
+  font-weight: bold;
+  text-decoration: underline;
+  color: rgb(56, 58, 60);
+}
