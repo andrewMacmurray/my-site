@@ -19,7 +19,7 @@ view_ meta screenHeight =
         , style "animation" "fade-in 0.3s both"
         ]
         [ column
-            [ paddingEach { edges | top = round screenHeight // 5 }
+            [ paddingEach { edges | top = (round screenHeight // 5) - Scale.medium }
             , spacing Scale.extraLarge
             ]
             [ Text.headline "Hi I'm Andrew"

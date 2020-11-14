@@ -52,7 +52,9 @@ postSummary ( postPath, post ) =
 linkToPost : PagePath Pages.PathKey -> Element msg -> Element msg
 linkToPost postPath content =
     Element.link [ Element.width Element.fill ]
-        { url = PagePath.toString postPath, label = content }
+        { url = PagePath.toString postPath
+        , label = content
+        }
 
 
 title : String -> Element msg

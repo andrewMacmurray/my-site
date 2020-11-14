@@ -7,18 +7,9 @@ import Sitemap
 
 
 build :
-    { siteUrl : String
-    }
-    ->
-        List
-            { path : PagePath Pages.PathKey
-            , frontmatter : Metadata
-            , body : String
-            }
-    ->
-        { path : List String
-        , content : String
-        }
+    { siteUrl : String }
+    -> List { path : PagePath Pages.PathKey, frontmatter : Metadata, body : String }
+    -> { path : List String, content : String }
 build config siteMetadata =
     { path = [ "sitemap.xml" ]
     , content =
@@ -33,9 +24,6 @@ build config siteMetadata =
                             _ ->
                                 True
                     )
-                |> List.map
-                    (\page ->
-                        { path = PagePath.toString page.path, lastMod = Nothing }
-                    )
+                |> List.map (\page -> { path = PagePath.toString page.path, lastMod = Nothing })
             )
     }
