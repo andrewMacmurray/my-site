@@ -103,7 +103,7 @@ markdownDocument =
 
 
 type alias Model =
-    { screenHeight : Float }
+    { screenHeight : Maybe Float }
 
 
 init : ( Model, Cmd Msg )
@@ -115,7 +115,7 @@ init =
 
 initialModel : Model
 initialModel =
-    { screenHeight = 0
+    { screenHeight = Nothing
     }
 
 
@@ -128,10 +128,10 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         ViewportReceived vp ->
-            ( { model | screenHeight = vp.viewport.height }, Cmd.none )
+            ( { model | screenHeight = Just vp.viewport.height }, Cmd.none )
 
         ScreenResized h ->
-            ( { model | screenHeight = toFloat h }, Cmd.none )
+            ( { model | screenHeight = Just (toFloat h) }, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg
