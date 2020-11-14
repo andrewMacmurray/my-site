@@ -13,7 +13,7 @@ view screenHeight meta =
             [ paddingEach { edges | top = round screenHeight // 5 }
             , spacing Scale.extraLarge
             ]
-            [ el [ centerX ] (Text.headline "Hi I'm Andrew")
+            [ Text.headline "Hi I'm Andrew"
             , paragraph [ spacing Scale.small ] [ Text.text [] meta.blurb ]
             ]
         ]

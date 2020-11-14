@@ -1,8 +1,8 @@
 import "./style.css";
-// @ts-ignore
-const { Elm } = require("./src/Main.elm");
+
+const {Elm} = require("./src/Main.elm");
 const pagesInit = require("elm-pages");
 
 pagesInit({
-  mainElmModule: Elm.Main
+    mainElmModule: Elm.Main
 });

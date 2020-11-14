@@ -1,5 +1,35 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
 
+/* Fonts */
+
+.f1 {
+  font-size: 38px !important;
+}
+
+.f2 {
+  font-size: 28px !important;
+}
+
+.f3 {
+  font-size: 20px !important;
+}
+
+.f4 {
+  font-size: 16px !important;
+}
+
+.f5 {
+  font-size: 10px !important;
+}
+
+@media (min-width: 1000px) {
+  .f1 {
+    font-size: 50px !important;
+  }
+}
+
+/* Animations */
+
 @keyframes expand-fade {
   from {
     opacity: 1;

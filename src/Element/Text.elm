@@ -4,16 +4,18 @@ module Element.Text exposing
     , text
     )
 
-import Element exposing (Attribute, Element)
+import Element exposing (Attribute, Element, centerX)
 import Element.Font as Font
 import Element.Palette as Palette
 import Element.Region as Region
+import Utils.Element exposing (class)
 
 
 headline : String -> Element msg
 headline content =
     Element.el
-        [ Font.size extraLarge
+        [ class "f1"
+        , centerX
         , Region.heading 1
         , Font.color Palette.grey
         ]
@@ -22,41 +24,16 @@ headline content =
 
 subtitle : List (Attribute msg) -> String -> Element msg
 subtitle attrs content =
-    Element.el (List.append [ Font.size medium ] attrs) (Element.text content)
+    Element.el (List.append [ class "f3", Region.heading 3 ] attrs) (Element.text content)
 
 
 text : List (Attribute msg) -> String -> Element msg
 text attrs content =
     Element.el
         (List.append
-            [ Font.size small
+            [ class "f4"
             , Font.color Palette.grey
             ]
             attrs
         )
         (Element.text content)
-
-
-extraLarge : number
-extraLarge =
-    50
-
-
-large : number
-large =
-    32
-
-
-medium : number
-medium =
-    20
-
-
-small : number
-small =
-    16
-
-
-extraSmall : number
-extraSmall =
-    10
