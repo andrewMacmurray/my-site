@@ -22,6 +22,10 @@
   font-size: 10px !important;
 }
 
+.spacing-override {
+  line-height: calc(1em + 14px) !important;
+}
+
 @media (min-width: 1000px) {
   .f1 {
     font-size: 50px !important;
@@ -29,6 +33,10 @@
 
   .f4 {
     font-size: 16px !important;
+  }
+
+  .spacing-override {
+    line-height: calc(1em + 24px) !important;
   }
 }
 

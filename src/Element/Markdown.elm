@@ -24,14 +24,14 @@ view =
         >> Result.withDefault []
         >> column
             [ width fill
-            , spacingXY 0 Scale.extraLarge
+            , spacingXY 0 (Scale.large + Scale.medium)
             ]
 
 
 renderer : Markdown.Renderer.Renderer (Element msg)
 renderer =
     { heading = heading
-    , paragraph = paragraph [ spacing Scale.medium ]
+    , paragraph = paragraph [ class "spacing-override" ]
     , thematicBreak = none
     , text = Text.text []
     , strong = row [ class "bold-override" ]
