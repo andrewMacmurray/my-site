@@ -33,24 +33,22 @@ date =
 
 image : Decoder (ImagePath Pages.PathKey)
 image =
-    fromString toImage
+    fromString
+        (\path ->
+            case findPath path of
+                Nothing ->
+                    "I couldn't find that. Available images are:\n"
+                        :: List.map ((\x -> "\t\"" ++ x ++ "\"") << ImagePath.toString) Pages.allImages
+                        |> String.join "\n"
+                        |> Decode.fail
+
+                Just path_ ->
+                    Decode.succeed path_
+        )
 
 
-toImage : String -> Decoder (ImagePath Pages.PathKey)
-toImage imageAssetPath =
-    case findMatchingImage imageAssetPath of
-        Nothing ->
-            "I couldn't find that. Available images are:\n"
-                :: List.map ((\x -> "\t\"" ++ x ++ "\"") << ImagePath.toString) Pages.allImages
-                |> String.join "\n"
-                |> Decode.fail
-
-        Just imagePath ->
-            Decode.succeed imagePath
-
-
-findMatchingImage : String -> Maybe (ImagePath Pages.PathKey)
-findMatchingImage path =
+findPath : String -> Maybe (ImagePath Pages.PathKey)
+findPath path =
     List.find (\i -> ImagePath.toString i == path) Pages.allImages
 
 
