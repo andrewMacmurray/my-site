@@ -1,4 +1,4 @@
-module Layout exposing (view)
+module Element.Layout exposing (view)
 
 import Element exposing (..)
 import Element.Background as Background
@@ -67,8 +67,8 @@ header currentPath =
             ]
             [ link [] { url = "/", label = dot }
             , row [ spacing Scale.medium ]
-                [ highlightableLink_ currentPath Pages.pages.about "about"
-                , highlightableLink currentPath Pages.pages.blog.directory "blog"
+                [ highlightableLink currentPath Pages.pages.blog.directory "blog"
+                , highlightableLink_ currentPath Pages.pages.contact "contact"
                 ]
             ]
         ]
@@ -97,7 +97,7 @@ highlightableLink_ : PagePath a -> PagePath b -> String -> Element msg
 highlightableLink_ current path label =
     withHighlight (PagePath.toString path == PagePath.toString current)
         { url = PagePath.toString path
-        , label = Text.subtitle [] label
+        , label = Text.subtitle [ Font.color Palette.black ] label
         }
 
 
@@ -109,7 +109,7 @@ highlightableLink currentPath linkDirectory displayName =
     in
     withHighlight isHighlighted
         { url = linkDirectory |> Directory.indexPath |> PagePath.toString
-        , label = Text.subtitle [] displayName
+        , label = Text.subtitle [ Font.color Palette.black ] displayName
         }
 
 

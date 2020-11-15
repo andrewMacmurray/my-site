@@ -1,4 +1,4 @@
-module Feed exposing (fileToGenerate)
+module Config.RssFeed exposing (build)
 
 import Metadata exposing (Metadata(..))
 import Pages
@@ -6,21 +6,21 @@ import Pages.PagePath as PagePath exposing (PagePath)
 import Rss
 
 
-fileToGenerate :
+build :
     { siteTagline : String, siteUrl : String }
     -> List { path : PagePath Pages.PathKey, frontmatter : Metadata, body : String }
     -> { path : List String, content : String }
-fileToGenerate config siteMetadata =
+build config siteMetadata =
     { path = [ "blog", "feed.xml" ]
-    , content = generate config siteMetadata
+    , content = toString config siteMetadata
     }
 
 
-generate :
+toString :
     { siteTagline : String, siteUrl : String }
     -> List { path : PagePath Pages.PathKey, frontmatter : Metadata, body : String }
     -> String
-generate { siteTagline, siteUrl } siteMetadata =
+toString { siteTagline, siteUrl } siteMetadata =
     Rss.generate
         { title = "elm-pages Blog"
         , description = siteTagline
@@ -45,7 +45,7 @@ metadataToRssItem page =
                     , description = article.description
                     , url = PagePath.toString page.path
                     , categories = []
-                    , author = article.author.name
+                    , author = "Andrew MacMuray"
                     , pubDate = Rss.Date article.published
                     , content = Nothing
                     }

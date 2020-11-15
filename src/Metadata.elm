@@ -5,27 +5,25 @@ module Metadata exposing
     , decoder
     )
 
-import Data.Author
 import Date exposing (Date)
 import Json.Decode as Decode exposing (Decoder)
-import List.Extra
+import Json.Decode.Pipeline as Decode
 import Pages
-import Pages.ImagePath as ImagePath exposing (ImagePath)
+import Pages.ImagePath exposing (ImagePath)
+import Utils.Decode as Decode
 
 
 type Metadata
-    = Page PageMetadata
-    | Article ArticleMetadata
-    | Author Data.Author.Author
-    | Home
+    = Article ArticleMetadata
     | BlogIndex
+    | Home
+    | Contact
 
 
 type alias ArticleMetadata =
     { title : String
     , description : String
     , published : Date
-    , author : Data.Author.Author
     , image : ImagePath Pages.PathKey
     , draft : Bool
     }
@@ -37,76 +35,29 @@ type alias PageMetadata =
 
 decoder : Decoder Metadata
 decoder =
-    Decode.field "type" Decode.string
-        |> Decode.andThen
-            (\pageType ->
-                case pageType of
-                    "home" ->
-                        Decode.succeed Home
-
-                    "page" ->
-                        Decode.field "title" Decode.string
-                            |> Decode.map (PageMetadata >> Page)
-
-                    "blog-index" ->
-                        Decode.succeed BlogIndex
-
-                    "author" ->
-                        Decode.map3 Data.Author.Author
-                            (Decode.field "name" Decode.string)
-                            (Decode.field "avatar" imageDecoder)
-                            (Decode.field "bio" Decode.string)
-                            |> Decode.map Author
-
-                    "blog" ->
-                        Decode.map6 ArticleMetadata
-                            (Decode.field "title" Decode.string)
-                            (Decode.field "description" Decode.string)
-                            (Decode.field "published"
-                                (Decode.string
-                                    |> Decode.andThen
-                                        (\isoString ->
-                                            case Date.fromIsoString isoString of
-                                                Ok date ->
-                                                    Decode.succeed date
-
-                                                Err error ->
-                                                    Decode.fail error
-                                        )
-                                )
-                            )
-                            (Decode.field "author" Data.Author.decoder)
-                            (Decode.field "image" imageDecoder)
-                            (Decode.field "draft" Decode.bool
-                                |> Decode.maybe
-                                |> Decode.map (Maybe.withDefault False)
-                            )
-                            |> Decode.map Article
-
-                    _ ->
-                        Decode.fail ("Unexpected page type " ++ pageType)
-            )
+    Decode.field "type" Decode.string |> Decode.andThen toMetadata
 
 
-imageDecoder : Decoder (ImagePath Pages.PathKey)
-imageDecoder =
-    Decode.string
-        |> Decode.andThen
-            (\imageAssetPath ->
-                case findMatchingImage imageAssetPath of
-                    Nothing ->
-                        "I couldn't find that. Available images are:\n"
-                            :: List.map
-                                ((\x -> "\t\"" ++ x ++ "\"") << ImagePath.toString)
-                                Pages.allImages
-                            |> String.join "\n"
-                            |> Decode.fail
+toMetadata : String -> Decoder Metadata
+toMetadata pageType =
+    case pageType of
+        "home" ->
+            Decode.succeed Home
 
-                    Just imagePath ->
-                        Decode.succeed imagePath
-            )
+        "contact" ->
+            Decode.succeed Contact
 
+        "blog-index" ->
+            Decode.succeed BlogIndex
 
-findMatchingImage : String -> Maybe (ImagePath Pages.PathKey)
-findMatchingImage imageAssetPath =
-    Pages.allImages |> List.Extra.find (\image -> ImagePath.toString image == imageAssetPath)
+        "blog" ->
+            Decode.succeed ArticleMetadata
+                |> Decode.required "title" Decode.string
+                |> Decode.required "description" Decode.string
+                |> Decode.required "published" Decode.date
+                |> Decode.required "image" Decode.image
+                |> Decode.optional "draft" Decode.bool False
+                |> Decode.map Article
+
+        _ ->
+            Decode.fail ("Unexpected page type " ++ pageType)

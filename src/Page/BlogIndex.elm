@@ -1,6 +1,5 @@
 module Page.BlogIndex exposing (view)
 
-import Data.Author
 import Date
 import Element exposing (Element)
 import Element.Border
@@ -107,9 +106,7 @@ postPreview post =
         ]
         [ title post.title
         , Element.row [ Element.spacing 10, Element.centerX ]
-            [ Data.Author.view [ Element.width (Element.px 40) ] post.author
-            , Element.text post.author.name
-            , Element.text "•"
+            [ Element.text "•"
             , Element.text (Date.format "MMMM ddd, yyyy" post.published)
             ]
         , post.description

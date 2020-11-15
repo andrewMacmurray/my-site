@@ -1,4 +1,4 @@
-module MySitemap exposing (build)
+module Config.Sitemap exposing (build)
 
 import Metadata exposing (Metadata(..))
 import Pages

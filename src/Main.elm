@@ -2,52 +2,31 @@ module Main exposing (main)
 
 import Browser.Dom as Dom exposing (Viewport)
 import Browser.Events
-import Color
-import Data.Author as Author
+import Config.Manifest as Manifest
+import Config.RssFeed as RssFeed
+import Config.Sitemap as Sitemap
 import Date
 import Element exposing (..)
-import Element.Font as Font
+import Element.Layout as Layout
 import Element.Markdown as Markdown
-import Element.Text as Text
-import Feed
 import Head
 import Head.Seo as Seo
 import Html exposing (Html)
 import Json.Decode
-import Layout
 import Metadata exposing (Metadata)
-import MySitemap
 import Page.Article
 import Page.BlogIndex as BlogIndex
+import Page.Contact as Contact
 import Page.Home as Home
-import Pages exposing (images, pages)
-import Pages.Manifest as Manifest
-import Pages.Manifest.Category
+import Pages exposing (images)
 import Pages.PagePath exposing (PagePath)
 import Pages.Platform
 import Pages.StaticHttp as StaticHttp
 import Task
 
 
-manifest : Manifest.Config Pages.PathKey
-manifest =
-    { backgroundColor = Just Color.white
-    , categories = [ Pages.Manifest.Category.education ]
-    , displayMode = Manifest.Standalone
-    , orientation = Manifest.Portrait
-    , description = "elm-pages-starter - A statically typed site generator."
-    , iarcRatingId = Nothing
-    , name = "andrew-macmurray"
-    , themeColor = Just Color.white
-    , startUrl = pages.index
-    , shortName = Just "elm-pages-starter"
-    , sourceIcon = images.iconPng
-    , icons = []
-    }
 
-
-type alias Rendered =
-    Element Msg
+-- Program
 
 
 main : Pages.Platform.Program Model Msg Metadata Rendered Pages.PathKey
@@ -58,7 +37,7 @@ main =
         , update = update
         , subscriptions = always (always subscriptions)
         , documents = [ markdownDocument ]
-        , manifest = manifest
+        , manifest = Manifest.build
         , canonicalSiteUrl = canonicalSiteUrl
         , onPageChange = Nothing
         , internals = Pages.internals
@@ -68,17 +47,13 @@ main =
 
 
 generateFiles :
-    List
-        { path : PagePath Pages.PathKey
-        , frontmatter : Metadata
-        , body : String
-        }
+    List { path : PagePath Pages.PathKey, frontmatter : Metadata, body : String }
     -> StaticHttp.Request (List (Result String { path : List String, content : String }))
 generateFiles siteMetadata =
     StaticHttp.succeed
         (List.map Ok
-            [ Feed.fileToGenerate { siteTagline = siteTagline, siteUrl = canonicalSiteUrl } siteMetadata
-            , MySitemap.build { siteUrl = canonicalSiteUrl } siteMetadata
+            [ RssFeed.build { siteTagline = siteTagline, siteUrl = canonicalSiteUrl } siteMetadata
+            , Sitemap.build { siteUrl = canonicalSiteUrl } siteMetadata
             ]
         )
 
@@ -91,8 +66,25 @@ markdownDocument =
     }
 
 
+
+-- Model
+
+
 type alias Model =
     { screenHeight : Maybe Float }
+
+
+type Msg
+    = ViewportReceived Viewport
+    | ScreenResized Int
+
+
+type alias Rendered =
+    Element Msg
+
+
+
+-- Init
 
 
 init : ( Model, Cmd Msg )
@@ -108,9 +100,8 @@ initialModel =
     }
 
 
-type Msg
-    = ViewportReceived Viewport
-    | ScreenResized Int
+
+-- Update
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -123,9 +114,17 @@ update msg model =
             ( { model | screenHeight = Just (toFloat h) }, Cmd.none )
 
 
+
+-- Subscriptions
+
+
 subscriptions : Model -> Sub Msg
 subscriptions _ =
     Browser.Events.onResize (always ScreenResized)
+
+
+
+-- View
 
 
 view :
@@ -151,26 +150,17 @@ pageView :
     -> { title : String, body : List (Element Msg) }
 pageView model siteMetadata page viewForPage =
     case page.frontmatter of
-        Metadata.Page metadata ->
-            { title = metadata.title
-            , body = [ viewForPage ]
-            }
-
         Metadata.Article metadata ->
             Page.Article.view metadata viewForPage
 
-        Metadata.Author author ->
-            { title = author.name
-            , body =
-                [ Text.headline [] author.name
-                , Author.view [] author
-                , paragraph [ centerX, Font.center ] [ viewForPage ]
-                ]
+        Metadata.BlogIndex ->
+            { title = "andrew-macmurray blog"
+            , body = [ column [ centerX ] [ BlogIndex.view siteMetadata ] ]
             }
 
-        Metadata.BlogIndex ->
-            { title = "elm-pages blog"
-            , body = [ column [ centerX ] [ BlogIndex.view siteMetadata ] ]
+        Metadata.Contact ->
+            { title = "andrew-macmurray contact"
+            , body = [ column [ centerX ] [ Contact.view ] ]
             }
 
         Metadata.Home ->
@@ -190,22 +180,6 @@ head : Metadata -> List (Head.Tag Pages.PathKey)
 head metadata =
     commonHeadTags
         ++ (case metadata of
-                Metadata.Page meta ->
-                    Seo.summaryLarge
-                        { canonicalUrlOverride = Nothing
-                        , siteName = siteName
-                        , image =
-                            { url = images.iconPng
-                            , alt = "elm-pages logo"
-                            , dimensions = Nothing
-                            , mimeType = Nothing
-                            }
-                        , description = siteTagline
-                        , locale = Nothing
-                        , title = meta.title
-                        }
-                        |> Seo.website
-
                 Metadata.Article meta ->
                     Seo.summaryLarge
                         { canonicalUrlOverride = Nothing
@@ -228,42 +202,23 @@ head metadata =
                             , expirationTime = Nothing
                             }
 
-                Metadata.Author meta ->
-                    let
-                        ( firstName, lastName ) =
-                            case meta.name |> String.split " " of
-                                [ first, last ] ->
-                                    ( first, last )
-
-                                [ first, middle, last ] ->
-                                    ( first ++ " " ++ middle, last )
-
-                                [] ->
-                                    ( "", "" )
-
-                                _ ->
-                                    ( meta.name, "" )
-                    in
-                    Seo.summary
+                Metadata.Home ->
+                    Seo.summaryLarge
                         { canonicalUrlOverride = Nothing
                         , siteName = siteName
                         , image =
-                            { url = meta.avatar
-                            , alt = meta.name ++ "'s elm-pages articles."
+                            { url = images.iconPng
+                            , alt = "elm-pages logo"
                             , dimensions = Nothing
                             , mimeType = Nothing
                             }
-                        , description = meta.bio
+                        , description = siteTagline
                         , locale = Nothing
-                        , title = meta.name ++ "'s elm-pages articles."
+                        , title = "elm-pages"
                         }
-                        |> Seo.profile
-                            { firstName = firstName
-                            , lastName = lastName
-                            , username = Nothing
-                            }
+                        |> Seo.website
 
-                Metadata.Home ->
+                Metadata.Contact ->
                     Seo.summaryLarge
                         { canonicalUrlOverride = Nothing
                         , siteName = siteName
@@ -299,7 +254,7 @@ head metadata =
 
 canonicalSiteUrl : String
 canonicalSiteUrl =
-    "https://elm-pages-starter.netlify.com"
+    "https://inspiring-swirles-26bb31.netlify.app/"
 
 
 siteTagline : String
