@@ -6,3 +6,5 @@ gen/
 .idea
 .env
 
+content/blog/*
+!content/blog/index.md
