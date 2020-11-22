@@ -23,17 +23,17 @@ type State
 
 init : Animator.Timeline State
 init =
-    sequence (Animator.init Packing)
+    sequence (Animator.init Packed)
 
 
 sequence : Animator.Timeline State -> Animator.Timeline State
 sequence =
     Animator.queue
-        [ Animator.event (Animator.seconds 0) Packing
+        [ Animator.event (Animator.seconds 0) Packed
         , Animator.wait (Animator.millis 300)
+        , Animator.event (Animator.millis 1000) Packing
+        , Animator.wait (Animator.millis 800)
         , Animator.event (Animator.millis 1000) Packed
-        , Animator.wait (Animator.millis 300)
-        , Animator.event (Animator.millis 1000) Sending
         ]
 
 
@@ -41,7 +41,7 @@ movement : State -> { letterOffset : Animator.Movement, envelopeScale : Animator
 movement state =
     case state of
         Packing ->
-            { letterOffset = Animator.at 0 |> Animator.withWobble 1
+            { letterOffset = Animator.at 0
             , envelopeScale = Animator.at 1 |> Animator.leaveLate 0.2
             }
 
@@ -84,8 +84,7 @@ icon timeline =
                     [ d "M41 0s28.8 20.63 38.5 27.51A4.94 4.94 0 0175.9 29H6.1c-1.44 0-2.7-.56-3.6-1.49L41 0z"
                     , fill "#3F3DC2"
                     , fillRule "nonzero"
-                    , style "transform-origin: 41px 27px"
-                    , transform ("scale(1, " ++ String.fromFloat envelopeScale ++ ")")
+                    , style ("transform-origin: 41px 27px; transform: scale(1, " ++ String.fromFloat envelopeScale ++ ")")
                     ]
                     []
                 , Svg.rect
