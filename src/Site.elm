@@ -3,6 +3,7 @@ module Site exposing
     , Metadata
     , Page
     , Path
+    , logo
     , name
     , tagline
     , titleFor
@@ -11,7 +12,8 @@ module Site exposing
 
 import Frontmatter exposing (Frontmatter)
 import Head
-import Pages
+import Head.Seo as Seo
+import Pages exposing (PathKey, images)
 import Pages.PagePath exposing (PagePath)
 
 
@@ -48,6 +50,15 @@ titleFor page =
 
 
 -- Constants
+
+
+logo : Seo.Image PathKey
+logo =
+    { url = images.siteLogo
+    , alt = "Andrew MacMurray logo"
+    , dimensions = Nothing
+    , mimeType = Nothing
+    }
 
 
 url : String

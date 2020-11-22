@@ -16,7 +16,7 @@ import Page.Article
 import Page.BlogIndex as BlogIndex
 import Page.Contact as Contact
 import Page.Home as Home
-import Pages exposing (PathKey, images)
+import Pages exposing (PathKey)
 import Pages.Platform
 import Pages.StaticHttp as StaticHttp
 import Site exposing (..)
@@ -153,7 +153,7 @@ head metadata =
                     Seo.summaryLarge
                         { canonicalUrlOverride = Nothing
                         , siteName = Site.name
-                        , image = siteLogo
+                        , image = Site.logo
                         , description = meta.description
                         , locale = Nothing
                         , title = Site.titleFor meta.title
@@ -170,7 +170,7 @@ head metadata =
                     Seo.summaryLarge
                         { canonicalUrlOverride = Nothing
                         , siteName = Site.name
-                        , image = siteLogo
+                        , image = Site.logo
                         , description = Site.tagline
                         , locale = Nothing
                         , title = Site.tagline
@@ -181,7 +181,7 @@ head metadata =
                     Seo.summaryLarge
                         { canonicalUrlOverride = Nothing
                         , siteName = Site.name
-                        , image = siteLogo
+                        , image = Site.logo
                         , description = Site.tagline
                         , locale = Nothing
                         , title = Site.titleFor "contact"
@@ -192,19 +192,10 @@ head metadata =
                     Seo.summaryLarge
                         { canonicalUrlOverride = Nothing
                         , siteName = Site.name
-                        , image = siteLogo
+                        , image = Site.logo
                         , description = Site.tagline
                         , locale = Nothing
                         , title = Site.titleFor "blog"
                         }
                         |> Seo.website
            )
-
-
-siteLogo : Seo.Image PathKey
-siteLogo =
-    { url = images.siteLogo
-    , alt = "Andrew MacMurray logo"
-    , dimensions = Nothing
-    , mimeType = Nothing
-    }
