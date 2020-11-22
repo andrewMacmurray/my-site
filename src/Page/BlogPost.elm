@@ -5,8 +5,7 @@ module Page.BlogPost exposing
     )
 
 import Date exposing (Date)
-import Element exposing (Element)
-import Element.Font as Font
+import Element exposing (Element, paragraph)
 import Element.Text as Text
 import Json.Decode as Decode
 import Json.Decode.Pipeline as Decode
@@ -37,16 +36,11 @@ decoder =
 
 
 view : Frontmatter -> Element msg -> { title : String, body : List (Element msg) }
-view frontmatter viewForPage =
+view frontmatter content =
     { title = frontmatter.title
     , body =
-        [ publishedDateView frontmatter |> Element.el [ Font.size 16, Font.color (Element.rgba255 0 0 0 0.6) ]
-        , Text.headline [] frontmatter.title
-        , viewForPage
+        [ Text.date frontmatter.published
+        , paragraph [] [ Text.title [] frontmatter.title ]
+        , content
         ]
     }
-
-
-publishedDateView : { a | published : Date } -> Element msg
-publishedDateView metadata =
-    Element.text (Date.format "MMMM ddd, yyyy" metadata.published)

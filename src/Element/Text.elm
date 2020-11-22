@@ -1,10 +1,12 @@
 module Element.Text exposing
-    ( headline
+    ( date
+    , headline
     , subtitle
     , text
     , title
     )
 
+import Date exposing (Date)
 import Element exposing (Attribute, Element)
 import Element.Font as Font
 import Element.Palette as Palette
@@ -59,3 +61,8 @@ text attrs content =
             attrs
         )
         (Element.text content)
+
+
+date : Date -> Element msg
+date d =
+    text [ Font.color Palette.black ] (Date.format "MMMM ddd, yyyy" d)

@@ -2,9 +2,12 @@ module Page.BlogIndex exposing (view)
 
 import Date
 import Element exposing (..)
-import Element.Border
-import Element.Font
+import Element.Animation as Animation
+import Element.Border as Border
+import Element.Font as Font
+import Element.Palette as Palette
 import Element.Scale as Scale
+import Element.Text as Text
 import Frontmatter exposing (Frontmatter)
 import Page.BlogPost as BlogPost
 import Pages
@@ -12,28 +15,28 @@ import Pages.PagePath as PagePath exposing (PagePath)
 import Site
 
 
+
+-- View
+
+
 view : Site.Metadata -> { title : String, body : List (Element msg) }
 view meta =
     { title = Site.titleFor "blog"
-    , body = [ column [ centerX ] [ view_ meta ] ]
+    , body = [ column [ centerX, width fill ] [ view_ meta ] ]
     }
 
 
 view_ : Site.Metadata -> Element msg
 view_ posts =
-    Element.column [ spacing Scale.medium ]
+    column
+        [ Animation.fadeIn
+        , width fill
+        , spacing Scale.medium
+        ]
         (posts
-            |> List.filterMap
-                (\( path, metadata ) ->
-                    case metadata of
-                        Frontmatter.BlogPost meta ->
-                            Just ( path, meta )
-
-                        _ ->
-                            Nothing
-                )
-            |> List.sortWith postPublishDateDescending
-            |> List.map summary
+            |> List.filterMap getPost
+            |> List.sortWith dateDescending
+            |> List.map toSummary
         )
 
 
@@ -41,19 +44,29 @@ type alias BlogPost =
     ( Site.Path, BlogPost.Frontmatter )
 
 
-postPublishDateDescending : BlogPost -> BlogPost -> Order
-postPublishDateDescending ( _, metadata1 ) ( _, metadata2 ) =
+getPost : ( Site.Path, Frontmatter ) -> Maybe BlogPost
+getPost ( path, frontmatter ) =
+    case frontmatter of
+        Frontmatter.BlogPost meta ->
+            Just ( path, meta )
+
+        _ ->
+            Nothing
+
+
+dateDescending : BlogPost -> BlogPost -> Order
+dateDescending ( _, metadata1 ) ( _, metadata2 ) =
     Date.compare metadata2.published metadata1.published
 
 
-summary : BlogPost -> Element msg
-summary ( postPath, post ) =
+toSummary : BlogPost -> Element msg
+toSummary ( postPath, post ) =
     postIndex post |> linkToPost postPath
 
 
 linkToPost : PagePath Pages.PathKey -> Element msg -> Element msg
 linkToPost postPath content =
-    Element.link [ Element.width Element.fill ]
+    link [ width fill ]
         { url = PagePath.toString postPath
         , label = content
         }
@@ -61,63 +74,37 @@ linkToPost postPath content =
 
 title : String -> Element msg
 title text =
-    [ Element.text text ]
-        |> Element.paragraph
-            [ Element.Font.size 36
-            , Element.Font.center
-            , Element.Font.semiBold
-            , Element.padding 16
-            ]
+    paragraph [] [ Text.title [ Font.color Palette.grey ] text ]
 
 
 postIndex : BlogPost.Frontmatter -> Element msg
 postIndex metadata =
-    Element.el
-        [ Element.centerX
-        , Element.width (Element.maximum 800 Element.fill)
-        , Element.padding 40
-        , Element.spacing 10
-        , Element.Border.width 1
-        , Element.Border.color (Element.rgba255 0 0 0 0.1)
-        , Element.mouseOver
-            [ Element.Border.color (Element.rgba255 0 0 0 1)
-            ]
+    el
+        [ centerX
+        , width (maximum 800 fill)
+        , padding Scale.medium
+        , spacing Scale.medium
+        , Border.width 1
+        , Border.color (rgba255 0 0 0 0.1)
+        , mouseOver [ Border.color (rgba255 0 0 0 1) ]
         ]
         (postPreview metadata)
 
 
 readMoreLink : Element msg
 readMoreLink =
-    Element.text "Continue reading >>"
-        |> Element.el
-            [ Element.centerX
-            , Element.Font.size 18
-            , Element.alpha 0.6
-            , Element.mouseOver [ Element.alpha 1 ]
-            , Element.Font.underline
-            , Element.Font.center
-            ]
+    Text.text [] "Continue reading >>"
 
 
 postPreview : BlogPost.Frontmatter -> Element msg
 postPreview post =
-    Element.textColumn
-        [ Element.centerX
-        , Element.width Element.fill
-        , Element.spacing 30
-        , Element.Font.size 18
+    textColumn
+        [ centerX
+        , width fill
+        , spacing Scale.medium
         ]
         [ title post.title
-        , Element.row [ Element.spacing 10, Element.centerX ]
-            [ Element.text "•"
-            , Element.text (Date.format "MMMM ddd, yyyy" post.published)
-            ]
-        , post.description
-            |> Element.text
-            |> List.singleton
-            |> Element.paragraph
-                [ Element.Font.size 22
-                , Element.Font.center
-                ]
+        , Text.date post.published
+        , paragraph [] [ Text.text [] post.description ]
         , readMoreLink
         ]

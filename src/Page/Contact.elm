@@ -2,6 +2,7 @@ module Page.Contact exposing (view)
 
 import Animator
 import Element exposing (..)
+import Element.Animation as Animation
 import Element.Icon.Mail as Mail
 import Element.Scale as Scale exposing (edges)
 import Element.Text as Text
@@ -22,5 +23,5 @@ view_ timeline =
         , spacing Scale.extraLarge
         ]
         [ Text.headline [ centerX ] "Get in touch"
-        , el [ centerX ] (Mail.icon timeline)
+        , el [ centerX, Animation.fadeIn ] (Mail.icon timeline)
         ]

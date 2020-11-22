@@ -6,7 +6,7 @@ import Element.Border as Border
 import Element.Font as Font
 import Element.Palette as Palette
 import Element.Region as Region
-import Element.Scale as Scale
+import Element.Scale as Scale exposing (edges)
 import Element.Text as Text
 import Frontmatter exposing (Frontmatter)
 import Html exposing (Html)
@@ -33,7 +33,7 @@ layout document page =
             [ width fill, spacing Scale.large ]
             [ header page.path
             , column
-                [ paddingXY Scale.medium 0
+                [ paddingEach { edges | left = Scale.medium, right = Scale.medium, bottom = Scale.extraLarge }
                 , spacing Scale.large
                 , Region.mainContent
                 , width (fill |> maximum 800)
