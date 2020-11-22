@@ -4,4 +4,5 @@ dist/
 .cache/
 gen/
 .idea
+.env
 

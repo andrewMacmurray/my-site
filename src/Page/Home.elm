@@ -21,7 +21,7 @@ view_ content screenHeight =
             [ paddingEach { edges | top = Scale.large + Scale.extraSmall }
             , spacing Scale.extraLarge
             ]
-            [ Text.headline [] "Hi I'm Andrew"
+            [ Text.headline [ centerX ] "Hi I'm Andrew"
             , paragraph [ spacing Scale.small ] [ content ]
             ]
         ]

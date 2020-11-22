@@ -18,7 +18,7 @@ date : Decoder Date
 date =
     fromString
         (\iso ->
-            case Date.fromIsoString iso of
+            case Date.fromIsoString (String.left 10 iso) of
                 Ok date_ ->
                     Decode.succeed date_
 

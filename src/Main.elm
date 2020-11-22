@@ -1,5 +1,6 @@
 module Main exposing (main)
 
+import Animator exposing (Animator)
 import Browser.Dom as Dom exposing (Viewport)
 import Browser.Events
 import Config.Manifest as Manifest
@@ -7,6 +8,7 @@ import Config.RssFeed as RssFeed
 import Config.Sitemap as Sitemap
 import Date
 import Element exposing (..)
+import Element.Icon.Mail as Mail
 import Element.Layout as Layout
 import Element.Markdown as Markdown
 import Head
@@ -18,11 +20,12 @@ import Page.Article
 import Page.BlogIndex as BlogIndex
 import Page.Contact as Contact
 import Page.Home as Home
-import Pages exposing (images)
+import Pages exposing (PathKey, images)
 import Pages.PagePath exposing (PagePath)
 import Pages.Platform
 import Pages.StaticHttp as StaticHttp
 import Task
+import Time
 
 
 
@@ -71,12 +74,15 @@ markdownDocument =
 
 
 type alias Model =
-    { screenHeight : Maybe Float }
+    { screenHeight : Maybe Float
+    , mail : Animator.Timeline Mail.State
+    }
 
 
 type Msg
     = ViewportReceived Viewport
     | ScreenResized Int
+    | Tick Time.Posix
 
 
 type alias Rendered =
@@ -97,6 +103,7 @@ init =
 initialModel : Model
 initialModel =
     { screenHeight = Nothing
+    , mail = Animator.init Mail.Packing |> Mail.sequence
     }
 
 
@@ -113,14 +120,26 @@ update msg model =
         ScreenResized h ->
             ( { model | screenHeight = Just (toFloat h) }, Cmd.none )
 
+        Tick time ->
+            ( Animator.update time animator model, Cmd.none )
+
 
 
 -- Subscriptions
 
 
 subscriptions : Model -> Sub Msg
-subscriptions _ =
-    Browser.Events.onResize (always ScreenResized)
+subscriptions model =
+    Sub.batch
+        [ Browser.Events.onResize (always ScreenResized)
+        , Animator.toSubscription Tick model animator
+        ]
+
+
+animator : Animator Model
+animator =
+    Animator.animator
+        |> Animator.watching .mail (\v model -> { model | mail = v })
 
 
 
@@ -160,7 +179,7 @@ pageView model siteMetadata page viewForPage =
 
         Metadata.Contact ->
             { title = "andrew-macmurray contact"
-            , body = [ column [ centerX ] [ Contact.view ] ]
+            , body = [ column [ centerX ] [ Contact.view model.mail ] ]
             }
 
         Metadata.Home ->
@@ -184,15 +203,10 @@ head metadata =
                     Seo.summaryLarge
                         { canonicalUrlOverride = Nothing
                         , siteName = siteName
-                        , image =
-                            { url = meta.image
-                            , alt = meta.description
-                            , dimensions = Nothing
-                            , mimeType = Nothing
-                            }
+                        , image = siteLogo
                         , description = meta.description
                         , locale = Nothing
-                        , title = meta.title
+                        , title = seoTitle meta.title
                         }
                         |> Seo.article
                             { tags = []
@@ -206,15 +220,10 @@ head metadata =
                     Seo.summaryLarge
                         { canonicalUrlOverride = Nothing
                         , siteName = siteName
-                        , image =
-                            { url = images.iconPng
-                            , alt = "elm-pages logo"
-                            , dimensions = Nothing
-                            , mimeType = Nothing
-                            }
+                        , image = siteLogo
                         , description = siteTagline
                         , locale = Nothing
-                        , title = "elm-pages"
+                        , title = siteTagline
                         }
                         |> Seo.website
 
@@ -222,15 +231,10 @@ head metadata =
                     Seo.summaryLarge
                         { canonicalUrlOverride = Nothing
                         , siteName = siteName
-                        , image =
-                            { url = images.iconPng
-                            , alt = "elm-pages logo"
-                            , dimensions = Nothing
-                            , mimeType = Nothing
-                            }
+                        , image = siteLogo
                         , description = siteTagline
                         , locale = Nothing
-                        , title = "elm-pages"
+                        , title = seoTitle "contact"
                         }
                         |> Seo.website
 
@@ -238,18 +242,27 @@ head metadata =
                     Seo.summaryLarge
                         { canonicalUrlOverride = Nothing
                         , siteName = siteName
-                        , image =
-                            { url = images.iconPng
-                            , alt = "elm-pages logo"
-                            , dimensions = Nothing
-                            , mimeType = Nothing
-                            }
+                        , image = siteLogo
                         , description = siteTagline
                         , locale = Nothing
-                        , title = "elm-pages blog"
+                        , title = seoTitle "blog"
                         }
                         |> Seo.website
            )
+
+
+siteLogo : Seo.Image PathKey
+siteLogo =
+    { url = images.siteLogo
+    , alt = "Andrew MacMurray logo"
+    , dimensions = Nothing
+    , mimeType = Nothing
+    }
+
+
+seoTitle : String -> String
+seoTitle page =
+    siteName ++ " - " ++ page
 
 
 canonicalSiteUrl : String

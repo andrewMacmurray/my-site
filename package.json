@@ -5,7 +5,8 @@
   "scripts": {
     "start": "elm-pages develop",
     "serve": "npm run build && http-server ./dist -a localhost -p 3000 -c-1",
-    "build": "elm-pages build"
+    "build": "elm-pages build",
+    "generate": "source .env && node ./scripts/generator.js"
   },
   "postinstall": "elm-tooling install",
   "dependencies": {
@@ -14,6 +15,7 @@
   "devDependencies": {
     "elm-format": "^0.8.4",
     "elm-tooling": "^0.5.0",
-    "http-server": "^0.12.3"
+    "http-server": "^0.12.3",
+    "node-fetch": "^2.6.1"
   }
 }

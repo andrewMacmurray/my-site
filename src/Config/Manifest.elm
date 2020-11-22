@@ -18,6 +18,6 @@ build =
     , themeColor = Just Color.white
     , startUrl = pages.index
     , shortName = Just "elm-pages-starter"
-    , sourceIcon = images.iconPng
+    , sourceIcon = images.siteLogo
     , icons = []
     }

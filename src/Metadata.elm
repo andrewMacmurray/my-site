@@ -8,8 +8,6 @@ module Metadata exposing
 import Date exposing (Date)
 import Json.Decode as Decode exposing (Decoder)
 import Json.Decode.Pipeline as Decode
-import Pages
-import Pages.ImagePath exposing (ImagePath)
 import Utils.Decode as Decode
 
 
@@ -24,8 +22,6 @@ type alias ArticleMetadata =
     { title : String
     , description : String
     , published : Date
-    , image : ImagePath Pages.PathKey
-    , draft : Bool
     }
 
 
@@ -55,8 +51,6 @@ toMetadata pageType =
                 |> Decode.required "title" Decode.string
                 |> Decode.required "description" Decode.string
                 |> Decode.required "published" Decode.date
-                |> Decode.required "image" Decode.image
-                |> Decode.optional "draft" Decode.bool False
                 |> Decode.map Article
 
         _ ->

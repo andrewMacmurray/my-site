@@ -36,19 +36,15 @@ metadataToRssItem : { path : PagePath Pages.PathKey, frontmatter : Metadata, bod
 metadataToRssItem page =
     case page.frontmatter of
         Article article ->
-            if article.draft then
-                Nothing
-
-            else
-                Just
-                    { title = article.title
-                    , description = article.description
-                    , url = PagePath.toString page.path
-                    , categories = []
-                    , author = "Andrew MacMuray"
-                    , pubDate = Rss.Date article.published
-                    , content = Nothing
-                    }
+            Just
+                { title = article.title
+                , description = article.description
+                , url = PagePath.toString page.path
+                , categories = []
+                , author = "Andrew MacMuray"
+                , pubDate = Rss.Date article.published
+                , content = Nothing
+                }
 
         _ ->
             Nothing

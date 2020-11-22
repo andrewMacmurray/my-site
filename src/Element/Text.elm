@@ -5,7 +5,7 @@ module Element.Text exposing
     , title
     )
 
-import Element exposing (Attribute, Element, centerX)
+import Element exposing (Attribute, Element)
 import Element.Font as Font
 import Element.Palette as Palette
 import Element.Region as Region
@@ -17,7 +17,6 @@ headline attrs content =
     Element.el
         (List.append
             [ class "f1"
-            , centerX
             , Region.heading 1
             , Font.color Palette.grey
             ]

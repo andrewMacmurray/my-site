@@ -23,11 +23,7 @@ view posts =
                 (\( path, metadata ) ->
                     case metadata of
                         Metadata.Article meta ->
-                            if meta.draft then
-                                Nothing
-
-                            else
-                                Just ( path, meta )
+                            Just ( path, meta )
 
                         _ ->
                             Nothing
@@ -44,8 +40,7 @@ postPublishDateDescending ( _, metadata1 ) ( _, metadata2 ) =
 
 postSummary : PostEntry -> Element msg
 postSummary ( postPath, post ) =
-    articleIndex post
-        |> linkToPost postPath
+    articleIndex post |> linkToPost postPath
 
 
 linkToPost : PagePath Pages.PathKey -> Element msg -> Element msg
