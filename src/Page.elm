@@ -1,5 +1,5 @@
-module Frontmatter exposing
-    ( Frontmatter(..)
+module Page exposing
+    ( Page(..)
     , decoder
     )
 
@@ -8,10 +8,10 @@ import Page.BlogPost as BlogPost
 
 
 
--- Frontmatter
+-- Page
 
 
-type Frontmatter
+type Page
     = BlogPost BlogPost.Frontmatter
     | BlogIndex
     | Home
@@ -22,15 +22,15 @@ type Frontmatter
 -- Decoder
 
 
-decoder : Decoder Frontmatter
+decoder : Decoder Page
 decoder =
     Decode.string
         |> Decode.field "type"
-        |> Decode.andThen toMetadata
+        |> Decode.andThen toPage
 
 
-toMetadata : String -> Decoder Frontmatter
-toMetadata pageType =
+toPage : String -> Decoder Page
+toPage pageType =
     case pageType of
         "home" ->
             Decode.succeed Home

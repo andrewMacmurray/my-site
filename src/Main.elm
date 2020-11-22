@@ -1,17 +1,15 @@
 module Main exposing (main)
 
 import Animator exposing (Animator)
-import Config.Generated as Generated
-import Config.Manifest as Manifest
-import Config.Markdown as Markdown
 import Date
+import Document.Markdown as Markdown
 import Element exposing (..)
 import Element.Icon.Mail as Mail
 import Element.Layout as Layout
-import Frontmatter exposing (Frontmatter)
 import Head
 import Head.Seo as Seo
 import Html exposing (Html)
+import Page exposing (Page)
 import Page.BlogIndex as BlogIndex
 import Page.BlogPost as BlogPost
 import Page.Contact as Contact
@@ -20,6 +18,8 @@ import Pages exposing (PathKey)
 import Pages.Platform
 import Pages.StaticHttp as StaticHttp
 import Site
+import Site.Generated as Generated
+import Site.Manifest as Manifest
 import Time
 
 
@@ -27,7 +27,7 @@ import Time
 -- Program
 
 
-main : Pages.Platform.Program Model Msg Frontmatter Rendered Pages.PathKey
+main : Pages.Platform.Program Model Msg Page Rendered Pages.PathKey
 main =
     Pages.Platform.init
         { init = always init
@@ -67,9 +67,7 @@ type alias Rendered =
 
 init : ( Model, Cmd Msg )
 init =
-    ( initialModel
-    , Cmd.none
-    )
+    ( initialModel, Cmd.none )
 
 
 initialModel : Model
@@ -124,16 +122,16 @@ view meta page =
 pageView : Model -> Site.Metadata -> Site.Page -> Rendered -> { title : String, body : List (Element Msg) }
 pageView model meta page rendered =
     case page.frontmatter of
-        Frontmatter.BlogPost frontmatter ->
-            BlogPost.view frontmatter rendered
+        Page.BlogPost page_ ->
+            BlogPost.view page_ rendered
 
-        Frontmatter.BlogIndex ->
+        Page.BlogIndex ->
             BlogIndex.view meta
 
-        Frontmatter.Contact ->
+        Page.Contact ->
             Contact.view model.mail
 
-        Frontmatter.Home ->
+        Page.Home ->
             Home.view rendered
 
 
@@ -141,11 +139,11 @@ pageView model meta page rendered =
 -- Head
 
 
-head : Frontmatter -> List Site.HeadTag
+head : Page -> List Site.HeadTag
 head metadata =
     commonHeadTags
         ++ (case metadata of
-                Frontmatter.BlogPost meta ->
+                Page.BlogPost meta ->
                     Seo.summaryLarge
                         { canonicalUrlOverride = Nothing
                         , siteName = Site.name
@@ -162,7 +160,7 @@ head metadata =
                             , expirationTime = Nothing
                             }
 
-                Frontmatter.Home ->
+                Page.Home ->
                     Seo.summaryLarge
                         { canonicalUrlOverride = Nothing
                         , siteName = Site.name
@@ -173,7 +171,7 @@ head metadata =
                         }
                         |> Seo.website
 
-                Frontmatter.Contact ->
+                Page.Contact ->
                     Seo.summaryLarge
                         { canonicalUrlOverride = Nothing
                         , siteName = Site.name
@@ -184,7 +182,7 @@ head metadata =
                         }
                         |> Seo.website
 
-                Frontmatter.BlogIndex ->
+                Page.BlogIndex ->
                     Seo.summaryLarge
                         { canonicalUrlOverride = Nothing
                         , siteName = Site.name

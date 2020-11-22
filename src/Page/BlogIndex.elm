@@ -8,7 +8,7 @@ import Element.Font as Font
 import Element.Palette as Palette
 import Element.Scale as Scale
 import Element.Text as Text
-import Frontmatter exposing (Frontmatter)
+import Page exposing (Page)
 import Page.BlogPost as BlogPost
 import Pages
 import Pages.PagePath as PagePath exposing (PagePath)
@@ -44,10 +44,10 @@ type alias BlogPost =
     ( Site.Path, BlogPost.Frontmatter )
 
 
-getPost : ( Site.Path, Frontmatter ) -> Maybe BlogPost
+getPost : ( Site.Path, Page ) -> Maybe BlogPost
 getPost ( path, frontmatter ) =
     case frontmatter of
-        Frontmatter.BlogPost meta ->
+        Page.BlogPost meta ->
             Just ( path, meta )
 
         _ ->

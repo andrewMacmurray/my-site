@@ -11,9 +11,9 @@ module Site exposing
     , url
     )
 
-import Frontmatter exposing (Frontmatter)
 import Head
 import Head.Seo as Seo
+import Page
 import Pages exposing (PathKey, images)
 import Pages.PagePath exposing (PagePath)
 
@@ -24,19 +24,19 @@ import Pages.PagePath exposing (PagePath)
 
 type alias Page =
     { path : Path
-    , frontmatter : Frontmatter
+    , frontmatter : Page.Page
     }
 
 
 type alias Page_ =
     { path : Path
-    , frontmatter : Frontmatter
+    , frontmatter : Page.Page
     , body : String
     }
 
 
 type alias Metadata =
-    List ( Path, Frontmatter )
+    List ( Path, Page.Page )
 
 
 type alias Path =

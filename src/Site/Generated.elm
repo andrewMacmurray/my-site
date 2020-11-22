@@ -1,9 +1,9 @@
-module Config.Generated exposing (files)
+module Site.Generated exposing (files)
 
-import Config.Generated.RssFeed as RssFeed
-import Config.Generated.Sitemap as Sitemap
 import Pages.StaticHttp as StaticHttp
 import Site
+import Site.Generated.RssFeed as RssFeed
+import Site.Generated.Sitemap as Sitemap
 
 
 type alias Generated =

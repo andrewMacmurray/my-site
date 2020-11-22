@@ -1,6 +1,6 @@
-module Config.Generated.RssFeed exposing (build)
+module Site.Generated.RssFeed exposing (build)
 
-import Frontmatter exposing (Frontmatter(..))
+import Page exposing (Page(..))
 import Pages
 import Pages.PagePath as PagePath exposing (PagePath)
 import Rss

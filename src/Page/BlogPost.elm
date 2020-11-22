@@ -13,7 +13,7 @@ import Utils.Decode as Decode
 
 
 
--- Frontmatter
+-- Page
 
 
 type alias Frontmatter =

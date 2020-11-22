@@ -8,8 +8,8 @@ import Element.Palette as Palette
 import Element.Region as Region
 import Element.Scale as Scale exposing (edges)
 import Element.Text as Text
-import Frontmatter exposing (Frontmatter)
 import Html exposing (Html)
+import Page exposing (Page)
 import Pages
 import Pages.Directory as Directory exposing (Directory)
 import Pages.PagePath as PagePath exposing (PagePath)
@@ -18,7 +18,7 @@ import Utils.Element exposing (style)
 
 view :
     { title : String, body : List (Element msg) }
-    -> { path : PagePath Pages.PathKey, frontmatter : Frontmatter }
+    -> { path : PagePath Pages.PathKey, frontmatter : Page }
     -> { title : String, body : Html msg }
 view document page =
     { title = document.title

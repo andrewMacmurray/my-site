@@ -1,4 +1,4 @@
-module Config.Manifest exposing (build)
+module Site.Manifest exposing (build)
 
 import Color
 import Pages exposing (images, pages)
