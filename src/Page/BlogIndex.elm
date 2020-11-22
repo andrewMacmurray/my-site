@@ -6,14 +6,10 @@ import Element.Border
 import Element.Font
 import Element.Scale as Scale
 import Frontmatter exposing (Frontmatter)
-import Page.Article as Article
+import Page.BlogPost as BlogPost
 import Pages
 import Pages.PagePath as PagePath exposing (PagePath)
 import Site
-
-
-type alias PostEntry =
-    ( Site.Path, Article.Frontmatter )
 
 
 view : Site.Metadata -> { title : String, body : List (Element msg) }
@@ -30,25 +26,29 @@ view_ posts =
             |> List.filterMap
                 (\( path, metadata ) ->
                     case metadata of
-                        Frontmatter.Article meta ->
+                        Frontmatter.BlogPost meta ->
                             Just ( path, meta )
 
                         _ ->
                             Nothing
                 )
             |> List.sortWith postPublishDateDescending
-            |> List.map postSummary
+            |> List.map summary
         )
 
 
-postPublishDateDescending : PostEntry -> PostEntry -> Order
+type alias BlogPost =
+    ( Site.Path, BlogPost.Frontmatter )
+
+
+postPublishDateDescending : BlogPost -> BlogPost -> Order
 postPublishDateDescending ( _, metadata1 ) ( _, metadata2 ) =
     Date.compare metadata2.published metadata1.published
 
 
-postSummary : PostEntry -> Element msg
-postSummary ( postPath, post ) =
-    articleIndex post |> linkToPost postPath
+summary : BlogPost -> Element msg
+summary ( postPath, post ) =
+    postIndex post |> linkToPost postPath
 
 
 linkToPost : PagePath Pages.PathKey -> Element msg -> Element msg
@@ -70,8 +70,8 @@ title text =
             ]
 
 
-articleIndex : Article.Frontmatter -> Element msg
-articleIndex metadata =
+postIndex : BlogPost.Frontmatter -> Element msg
+postIndex metadata =
     Element.el
         [ Element.centerX
         , Element.width (Element.maximum 800 Element.fill)
@@ -99,7 +99,7 @@ readMoreLink =
             ]
 
 
-postPreview : Article.Frontmatter -> Element msg
+postPreview : BlogPost.Frontmatter -> Element msg
 postPreview post =
     Element.textColumn
         [ Element.centerX

@@ -1,4 +1,4 @@
-module Page.Article exposing
+module Page.BlogPost exposing
     ( Frontmatter
     , decoder
     , view

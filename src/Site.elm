@@ -2,6 +2,7 @@ module Site exposing
     ( HeadTag
     , Metadata
     , Page
+    , Page_
     , Path
     , logo
     , name
@@ -24,6 +25,13 @@ import Pages.PagePath exposing (PagePath)
 type alias Page =
     { path : Path
     , frontmatter : Frontmatter
+    }
+
+
+type alias Page_ =
+    { path : Path
+    , frontmatter : Frontmatter
+    , body : String
     }
 
 

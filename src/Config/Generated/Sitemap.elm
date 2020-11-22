@@ -1,16 +1,19 @@
 module Config.Generated.Sitemap exposing (build)
 
-import Frontmatter exposing (Frontmatter(..))
-import Pages
 import Pages.PagePath as PagePath exposing (PagePath)
+import Site
 import Sitemap
 
 
-build :
-    { siteUrl : String }
-    -> List { path : PagePath Pages.PathKey, frontmatter : Frontmatter, body : String }
-    -> { path : List String, content : String }
-build config siteMetadata =
+build : List Site.Page_ -> { path : List String, content : String }
+build pages =
     { path = [ "sitemap.xml" ]
-    , content = Sitemap.build config (siteMetadata |> List.map (\page -> { path = PagePath.toString page.path, lastMod = Nothing }))
+    , content = Sitemap.build { siteUrl = Site.url } (List.map toEntry pages)
+    }
+
+
+toEntry : Site.Page_ -> Sitemap.Entry
+toEntry page =
+    { path = PagePath.toString page.path
+    , lastMod = Nothing
     }

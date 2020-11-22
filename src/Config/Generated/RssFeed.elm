@@ -4,38 +4,33 @@ import Frontmatter exposing (Frontmatter(..))
 import Pages
 import Pages.PagePath as PagePath exposing (PagePath)
 import Rss
+import Site
 
 
-build :
-    { siteTagline : String, siteUrl : String }
-    -> List { path : PagePath Pages.PathKey, frontmatter : Frontmatter, body : String }
-    -> { path : List String, content : String }
-build config siteMetadata =
+build : List Site.Page_ -> { path : List String, content : String }
+build pages =
     { path = [ "blog", "feed.xml" ]
-    , content = toString config siteMetadata
+    , content = toString pages
     }
 
 
-toString :
-    { siteTagline : String, siteUrl : String }
-    -> List { path : PagePath Pages.PathKey, frontmatter : Frontmatter, body : String }
-    -> String
-toString { siteTagline, siteUrl } siteMetadata =
+toString : List Site.Page_ -> String
+toString pages =
     Rss.generate
-        { title = "elm-pages Blog"
-        , description = siteTagline
-        , url = "https://elm-pages.com/blog"
+        { title = Site.titleFor "blog"
+        , description = Site.tagline
+        , url = Site.url ++ "/blog"
         , lastBuildTime = Pages.builtAt
-        , generator = Just "elm-pages"
-        , items = siteMetadata |> List.filterMap metadataToRssItem
-        , siteUrl = siteUrl
+        , generator = Just Site.name
+        , items = List.filterMap metadataToRssItem pages
+        , siteUrl = Site.url
         }
 
 
-metadataToRssItem : { path : PagePath Pages.PathKey, frontmatter : Frontmatter, body : String } -> Maybe Rss.Item
+metadataToRssItem : Site.Page_ -> Maybe Rss.Item
 metadataToRssItem page =
     case page.frontmatter of
-        Article article ->
+        BlogPost article ->
             Just
                 { title = article.title
                 , description = article.description

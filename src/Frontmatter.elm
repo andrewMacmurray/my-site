@@ -4,7 +4,7 @@ module Frontmatter exposing
     )
 
 import Json.Decode as Decode exposing (Decoder)
-import Page.Article as Article
+import Page.BlogPost as BlogPost
 
 
 
@@ -12,7 +12,7 @@ import Page.Article as Article
 
 
 type Frontmatter
-    = Article Article.Frontmatter
+    = BlogPost BlogPost.Frontmatter
     | BlogIndex
     | Home
     | Contact
@@ -42,7 +42,7 @@ toMetadata pageType =
             Decode.succeed BlogIndex
 
         "blog" ->
-            Decode.map Article Article.decoder
+            Decode.map BlogPost BlogPost.decoder
 
         _ ->
             Decode.fail ("Unexpected page type " ++ pageType)

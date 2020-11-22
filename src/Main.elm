@@ -12,14 +12,14 @@ import Frontmatter exposing (Frontmatter)
 import Head
 import Head.Seo as Seo
 import Html exposing (Html)
-import Page.Article
 import Page.BlogIndex as BlogIndex
+import Page.BlogPost as BlogPost
 import Page.Contact as Contact
 import Page.Home as Home
 import Pages exposing (PathKey)
 import Pages.Platform
 import Pages.StaticHttp as StaticHttp
-import Site exposing (..)
+import Site
 import Time
 
 
@@ -100,8 +100,7 @@ subscriptions model =
 
 animator : Animator Model
 animator =
-    Animator.animator
-        |> Animator.watching .mail (\v model -> { model | mail = v })
+    Animator.animator |> Animator.watching .mail (\v model -> { model | mail = v })
 
 
 
@@ -125,8 +124,8 @@ view meta page =
 pageView : Model -> Site.Metadata -> Site.Page -> Rendered -> { title : String, body : List (Element Msg) }
 pageView model meta page rendered =
     case page.frontmatter of
-        Frontmatter.Article frontmatter ->
-            Page.Article.view frontmatter rendered
+        Frontmatter.BlogPost frontmatter ->
+            BlogPost.view frontmatter rendered
 
         Frontmatter.BlogIndex ->
             BlogIndex.view meta
@@ -138,18 +137,15 @@ pageView model meta page rendered =
             Home.view rendered
 
 
-commonHeadTags : List (Head.Tag Pages.PathKey)
-commonHeadTags =
-    [ Head.rssLink "/blog/feed.xml"
-    , Head.sitemapLink "/sitemap.xml"
-    ]
+
+-- Head
 
 
-head : Frontmatter -> List (Head.Tag Pages.PathKey)
+head : Frontmatter -> List Site.HeadTag
 head metadata =
     commonHeadTags
         ++ (case metadata of
-                Frontmatter.Article meta ->
+                Frontmatter.BlogPost meta ->
                     Seo.summaryLarge
                         { canonicalUrlOverride = Nothing
                         , siteName = Site.name
@@ -199,3 +195,10 @@ head metadata =
                         }
                         |> Seo.website
            )
+
+
+commonHeadTags : List Site.HeadTag
+commonHeadTags =
+    [ Head.rssLink "/blog/feed.xml"
+    , Head.sitemapLink "/sitemap.xml"
+    ]
