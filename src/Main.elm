@@ -1,30 +1,25 @@
 module Main exposing (main)
 
 import Animator exposing (Animator)
-import Browser.Dom as Dom exposing (Viewport)
-import Browser.Events
+import Config.Generated as Generated
 import Config.Manifest as Manifest
-import Config.RssFeed as RssFeed
-import Config.Sitemap as Sitemap
+import Config.Markdown as Markdown
 import Date
 import Element exposing (..)
 import Element.Icon.Mail as Mail
 import Element.Layout as Layout
-import Element.Markdown as Markdown
+import Frontmatter exposing (Frontmatter)
 import Head
 import Head.Seo as Seo
 import Html exposing (Html)
-import Json.Decode
-import Metadata exposing (Metadata)
 import Page.Article
 import Page.BlogIndex as BlogIndex
 import Page.Contact as Contact
 import Page.Home as Home
 import Pages exposing (PathKey, images)
-import Pages.PagePath exposing (PagePath)
 import Pages.Platform
 import Pages.StaticHttp as StaticHttp
-import Task
+import Site exposing (..)
 import Time
 
 
@@ -32,41 +27,21 @@ import Time
 -- Program
 
 
-main : Pages.Platform.Program Model Msg Metadata Rendered Pages.PathKey
+main : Pages.Platform.Program Model Msg Frontmatter Rendered Pages.PathKey
 main =
     Pages.Platform.init
         { init = always init
         , view = view
         , update = update
         , subscriptions = always (always subscriptions)
-        , documents = [ markdownDocument ]
+        , documents = [ Markdown.document ]
         , manifest = Manifest.build
-        , canonicalSiteUrl = canonicalSiteUrl
+        , canonicalSiteUrl = Site.url
         , onPageChange = Nothing
         , internals = Pages.internals
         }
-        |> Pages.Platform.withFileGenerator generateFiles
+        |> Pages.Platform.withFileGenerator Generated.files
         |> Pages.Platform.toProgram
-
-
-generateFiles :
-    List { path : PagePath Pages.PathKey, frontmatter : Metadata, body : String }
-    -> StaticHttp.Request (List (Result String { path : List String, content : String }))
-generateFiles siteMetadata =
-    StaticHttp.succeed
-        (List.map Ok
-            [ RssFeed.build { siteTagline = siteTagline, siteUrl = canonicalSiteUrl } siteMetadata
-            , Sitemap.build { siteUrl = canonicalSiteUrl } siteMetadata
-            ]
-        )
-
-
-markdownDocument : { extension : String, metadata : Json.Decode.Decoder Metadata, body : String -> Result error (Element msg) }
-markdownDocument =
-    { extension = "md"
-    , metadata = Metadata.decoder
-    , body = Markdown.view >> Ok
-    }
 
 
 
@@ -74,15 +49,12 @@ markdownDocument =
 
 
 type alias Model =
-    { screenHeight : Maybe Float
-    , mail : Animator.Timeline Mail.State
+    { mail : Animator.Timeline Mail.State
     }
 
 
 type Msg
-    = ViewportReceived Viewport
-    | ScreenResized Int
-    | Tick Time.Posix
+    = Tick Time.Posix
 
 
 type alias Rendered =
@@ -96,14 +68,13 @@ type alias Rendered =
 init : ( Model, Cmd Msg )
 init =
     ( initialModel
-    , Task.perform ViewportReceived Dom.getViewport
+    , Cmd.none
     )
 
 
 initialModel : Model
 initialModel =
-    { screenHeight = Nothing
-    , mail = Animator.init Mail.Packing |> Mail.sequence
+    { mail = Mail.init
     }
 
 
@@ -114,12 +85,6 @@ initialModel =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        ViewportReceived vp ->
-            ( { model | screenHeight = Just vp.viewport.height }, Cmd.none )
-
-        ScreenResized h ->
-            ( { model | screenHeight = Just (toFloat h) }, Cmd.none )
-
         Tick time ->
             ( Animator.update time animator model, Cmd.none )
 
@@ -130,10 +95,7 @@ update msg model =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.batch
-        [ Browser.Events.onResize (always ScreenResized)
-        , Animator.toSubscription Tick model animator
-        ]
+    Animator.toSubscription Tick model animator
 
 
 animator : Animator Model
@@ -146,46 +108,34 @@ animator =
 -- View
 
 
-view :
-    List ( PagePath Pages.PathKey, Metadata )
-    -> { path : PagePath Pages.PathKey, frontmatter : Metadata }
-    ->
-        StaticHttp.Request
-            { view : Model -> Rendered -> { title : String, body : Html Msg }
-            , head : List (Head.Tag Pages.PathKey)
-            }
-view siteMetadata page =
+type alias View =
+    { view : Model -> Rendered -> { title : String, body : Html Msg }
+    , head : List Site.HeadTag
+    }
+
+
+view : Site.Metadata -> Site.Page -> StaticHttp.Request View
+view meta page =
     StaticHttp.succeed
-        { view = \model viewForPage -> Layout.view (pageView model siteMetadata page viewForPage) page
+        { view = \model rendered -> Layout.view (pageView model meta page rendered) page
         , head = head page.frontmatter
         }
 
 
-pageView :
-    Model
-    -> List ( PagePath Pages.PathKey, Metadata )
-    -> { path : PagePath Pages.PathKey, frontmatter : Metadata }
-    -> Rendered
-    -> { title : String, body : List (Element Msg) }
-pageView model siteMetadata page viewForPage =
+pageView : Model -> Site.Metadata -> Site.Page -> Rendered -> { title : String, body : List (Element Msg) }
+pageView model meta page rendered =
     case page.frontmatter of
-        Metadata.Article metadata ->
-            Page.Article.view metadata viewForPage
+        Frontmatter.Article frontmatter ->
+            Page.Article.view frontmatter rendered
 
-        Metadata.BlogIndex ->
-            { title = "andrew-macmurray blog"
-            , body = [ column [ centerX ] [ BlogIndex.view siteMetadata ] ]
-            }
+        Frontmatter.BlogIndex ->
+            BlogIndex.view meta
 
-        Metadata.Contact ->
-            { title = "andrew-macmurray contact"
-            , body = [ column [ centerX ] [ Contact.view model.mail ] ]
-            }
+        Frontmatter.Contact ->
+            Contact.view model.mail
 
-        Metadata.Home ->
-            { title = "andrew-macmurray"
-            , body = [ column [ centerX ] [ Home.view viewForPage model.screenHeight ] ]
-            }
+        Frontmatter.Home ->
+            Home.view rendered
 
 
 commonHeadTags : List (Head.Tag Pages.PathKey)
@@ -195,18 +145,18 @@ commonHeadTags =
     ]
 
 
-head : Metadata -> List (Head.Tag Pages.PathKey)
+head : Frontmatter -> List (Head.Tag Pages.PathKey)
 head metadata =
     commonHeadTags
         ++ (case metadata of
-                Metadata.Article meta ->
+                Frontmatter.Article meta ->
                     Seo.summaryLarge
                         { canonicalUrlOverride = Nothing
-                        , siteName = siteName
+                        , siteName = Site.name
                         , image = siteLogo
                         , description = meta.description
                         , locale = Nothing
-                        , title = seoTitle meta.title
+                        , title = Site.titleFor meta.title
                         }
                         |> Seo.article
                             { tags = []
@@ -216,36 +166,36 @@ head metadata =
                             , expirationTime = Nothing
                             }
 
-                Metadata.Home ->
+                Frontmatter.Home ->
                     Seo.summaryLarge
                         { canonicalUrlOverride = Nothing
-                        , siteName = siteName
+                        , siteName = Site.name
                         , image = siteLogo
-                        , description = siteTagline
+                        , description = Site.tagline
                         , locale = Nothing
-                        , title = siteTagline
+                        , title = Site.tagline
                         }
                         |> Seo.website
 
-                Metadata.Contact ->
+                Frontmatter.Contact ->
                     Seo.summaryLarge
                         { canonicalUrlOverride = Nothing
-                        , siteName = siteName
+                        , siteName = Site.name
                         , image = siteLogo
-                        , description = siteTagline
+                        , description = Site.tagline
                         , locale = Nothing
-                        , title = seoTitle "contact"
+                        , title = Site.titleFor "contact"
                         }
                         |> Seo.website
 
-                Metadata.BlogIndex ->
+                Frontmatter.BlogIndex ->
                     Seo.summaryLarge
                         { canonicalUrlOverride = Nothing
-                        , siteName = siteName
+                        , siteName = Site.name
                         , image = siteLogo
-                        , description = siteTagline
+                        , description = Site.tagline
                         , locale = Nothing
-                        , title = seoTitle "blog"
+                        , title = Site.titleFor "blog"
                         }
                         |> Seo.website
            )
@@ -258,23 +208,3 @@ siteLogo =
     , dimensions = Nothing
     , mimeType = Nothing
     }
-
-
-seoTitle : String -> String
-seoTitle page =
-    siteName ++ " - " ++ page
-
-
-canonicalSiteUrl : String
-canonicalSiteUrl =
-    "https://inspiring-swirles-26bb31.netlify.app/"
-
-
-siteTagline : String
-siteTagline =
-    "Andrew MacMurray"
-
-
-siteName : String
-siteName =
-    "andrew-macmurray"

@@ -1,7 +1,7 @@
 module Element.Icon.Mail exposing
     ( State(..)
     , icon
-    , sequence
+    , init
     )
 
 import Animator
@@ -19,6 +19,11 @@ type State
     = Packing
     | Packed
     | Sending
+
+
+init : Animator.Timeline State
+init =
+    sequence (Animator.init Packing)
 
 
 sequence : Animator.Timeline State -> Animator.Timeline State

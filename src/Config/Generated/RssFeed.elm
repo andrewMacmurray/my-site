@@ -1,6 +1,6 @@
-module Config.RssFeed exposing (build)
+module Config.Generated.RssFeed exposing (build)
 
-import Metadata exposing (Metadata(..))
+import Frontmatter exposing (Frontmatter(..))
 import Pages
 import Pages.PagePath as PagePath exposing (PagePath)
 import Rss
@@ -8,7 +8,7 @@ import Rss
 
 build :
     { siteTagline : String, siteUrl : String }
-    -> List { path : PagePath Pages.PathKey, frontmatter : Metadata, body : String }
+    -> List { path : PagePath Pages.PathKey, frontmatter : Frontmatter, body : String }
     -> { path : List String, content : String }
 build config siteMetadata =
     { path = [ "blog", "feed.xml" ]
@@ -18,7 +18,7 @@ build config siteMetadata =
 
 toString :
     { siteTagline : String, siteUrl : String }
-    -> List { path : PagePath Pages.PathKey, frontmatter : Metadata, body : String }
+    -> List { path : PagePath Pages.PathKey, frontmatter : Frontmatter, body : String }
     -> String
 toString { siteTagline, siteUrl } siteMetadata =
     Rss.generate
@@ -32,7 +32,7 @@ toString { siteTagline, siteUrl } siteMetadata =
         }
 
 
-metadataToRssItem : { path : PagePath Pages.PathKey, frontmatter : Metadata, body : String } -> Maybe Rss.Item
+metadataToRssItem : { path : PagePath Pages.PathKey, frontmatter : Frontmatter, body : String } -> Maybe Rss.Item
 metadataToRssItem page =
     case page.frontmatter of
         Article article ->

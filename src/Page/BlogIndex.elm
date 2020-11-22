@@ -1,28 +1,36 @@
 module Page.BlogIndex exposing (view)
 
 import Date
-import Element exposing (Element)
+import Element exposing (..)
 import Element.Border
 import Element.Font
-import Metadata exposing (Metadata)
+import Element.Scale as Scale
+import Frontmatter exposing (Frontmatter)
+import Page.Article as Article
 import Pages
 import Pages.PagePath as PagePath exposing (PagePath)
+import Site
 
 
 type alias PostEntry =
-    ( PagePath Pages.PathKey
-    , Metadata.ArticleMetadata
-    )
+    ( Site.Path, Article.Frontmatter )
 
 
-view : List ( PagePath Pages.PathKey, Metadata ) -> Element msg
-view posts =
-    Element.column [ Element.spacing 20 ]
+view : Site.Metadata -> { title : String, body : List (Element msg) }
+view meta =
+    { title = Site.titleFor "blog"
+    , body = [ column [ centerX ] [ view_ meta ] ]
+    }
+
+
+view_ : Site.Metadata -> Element msg
+view_ posts =
+    Element.column [ spacing Scale.medium ]
         (posts
             |> List.filterMap
                 (\( path, metadata ) ->
                     case metadata of
-                        Metadata.Article meta ->
+                        Frontmatter.Article meta ->
                             Just ( path, meta )
 
                         _ ->
@@ -62,7 +70,7 @@ title text =
             ]
 
 
-articleIndex : Metadata.ArticleMetadata -> Element msg
+articleIndex : Article.Frontmatter -> Element msg
 articleIndex metadata =
     Element.el
         [ Element.centerX
@@ -91,7 +99,7 @@ readMoreLink =
             ]
 
 
-postPreview : Metadata.ArticleMetadata -> Element msg
+postPreview : Article.Frontmatter -> Element msg
 postPreview post =
     Element.textColumn
         [ Element.centerX

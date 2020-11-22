@@ -1,18 +1,47 @@
-module Page.Article exposing (view)
+module Page.Article exposing
+    ( Frontmatter
+    , decoder
+    , view
+    )
 
 import Date exposing (Date)
 import Element exposing (Element)
 import Element.Font as Font
 import Element.Text as Text
-import Metadata exposing (ArticleMetadata)
+import Json.Decode as Decode
+import Json.Decode.Pipeline as Decode
+import Utils.Decode as Decode
 
 
-view : ArticleMetadata -> Element msg -> { title : String, body : List (Element msg) }
-view metadata viewForPage =
-    { title = metadata.title
+
+-- Frontmatter
+
+
+type alias Frontmatter =
+    { title : String
+    , description : String
+    , published : Date
+    }
+
+
+decoder : Decode.Decoder Frontmatter
+decoder =
+    Decode.succeed Frontmatter
+        |> Decode.required "title" Decode.string
+        |> Decode.required "description" Decode.string
+        |> Decode.required "published" Decode.date
+
+
+
+-- View
+
+
+view : Frontmatter -> Element msg -> { title : String, body : List (Element msg) }
+view frontmatter viewForPage =
+    { title = frontmatter.title
     , body =
-        [ publishedDateView metadata |> Element.el [ Font.size 16, Font.color (Element.rgba255 0 0 0 0.6) ]
-        , Text.headline [] metadata.title
+        [ publishedDateView frontmatter |> Element.el [ Font.size 16, Font.color (Element.rgba255 0 0 0 0.6) ]
+        , Text.headline [] frontmatter.title
         , viewForPage
         ]
     }

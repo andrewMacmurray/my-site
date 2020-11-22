@@ -3,19 +3,21 @@ module Page.Home exposing (view)
 import Element exposing (..)
 import Element.Scale as Scale exposing (edges)
 import Element.Text as Text
-import Utils.Element as Element exposing (style)
+import Site
+import Utils.Element exposing (style)
 
 
-view : Element msg -> Maybe Float -> Element msg
+view : Element msg -> { title : String, body : List (Element msg) }
 view content =
-    Element.maybe (view_ content)
+    { title = Site.name
+    , body = [ column [ centerX ] [ view_ content ] ]
+    }
 
 
-view_ : Element msg -> Float -> Element msg
-view_ content screenHeight =
+view_ : Element msg -> Element msg
+view_ content =
     column
-        [ height (px (round screenHeight - 72 - Scale.medium))
-        , style "animation" "fade-in 0.3s both"
+        [ style "animation" "fade-in 0.3s both"
         ]
         [ column
             [ paddingEach { edges | top = Scale.large + Scale.extraSmall }
