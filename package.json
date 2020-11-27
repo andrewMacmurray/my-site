@@ -6,7 +6,7 @@
     "start": "npm run generate && elm-pages develop",
     "serve": "npm run build && http-server ./dist -a localhost -p 3000 -c-1",
     "build": "npm run generate && elm-pages build",
-    "generate": "node ./scripts/generator.js"
+    "generate": "spago run"
   },
   "postinstall": "elm-tooling install",
   "dependencies": {
@@ -16,6 +16,9 @@
     "elm-format": "^0.8.4",
     "elm-tooling": "^0.5.0",
     "http-server": "^0.12.3",
-    "node-fetch": "^2.6.1"
+    "node-fetch": "^2.6.1",
+    "purescript": "^0.13.8",
+    "spago": "^0.17.0",
+    "xhr2": "^0.2.0"
   }
 }

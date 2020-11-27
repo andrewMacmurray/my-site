@@ -8,3 +8,8 @@ gen/
 
 content/blog/*
 !content/blog/index.md
+
+.spago
+output
+.psc-ide-port
+.purs-repl
