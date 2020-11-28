@@ -5,10 +5,11 @@ module Page.BlogPost exposing
     )
 
 import Date exposing (Date)
-import Element exposing (Element, paragraph)
+import Element exposing (Element)
 import Element.Text as Text
 import Json.Decode as Decode
 import Json.Decode.Pipeline as Decode
+import String.Extra as String
 import Utils.Decode as Decode
 
 
@@ -40,7 +41,12 @@ view frontmatter content =
     { title = frontmatter.title
     , body =
         [ Text.date frontmatter.published
-        , Text.paragraph [] [ Text.title [] frontmatter.title ]
+        , title frontmatter.title
         , content
         ]
     }
+
+
+title : String -> Element msg
+title t =
+    Text.paragraph [] [ Text.title [] (String.toTitleCase t) ]

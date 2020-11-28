@@ -16,6 +16,7 @@ import Head.Seo as Seo
 import Page
 import Pages exposing (PathKey, images)
 import Pages.PagePath exposing (PagePath)
+import String.Extra as String
 
 
 
@@ -53,7 +54,7 @@ type alias HeadTag =
 
 titleFor : String -> String
 titleFor page =
-    name ++ " - " ++ page
+    String.toTitleCase (name ++ " - " ++ page)
 
 
 
@@ -71,7 +72,7 @@ logo =
 
 url : String
 url =
-    "https://inspiring-swirles-26bb31.netlify.app/"
+    "https://amacmurray.vercel.app"
 
 
 tagline : String
@@ -81,4 +82,4 @@ tagline =
 
 name : String
 name =
-    "andrew-macmurray"
+    "Andrew MacMurray"
