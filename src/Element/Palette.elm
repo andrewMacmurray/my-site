@@ -1,7 +1,12 @@
 module Element.Palette exposing
     ( black
-    , color
     , grey
+    , primary
+    , secondary
+    , secondaryLight
+    , tertiary
+    , tertiaryLight
+    , toRgbString
     )
 
 import Element exposing (..)
@@ -17,11 +22,56 @@ black =
     rgb255 25 25 25
 
 
-color :
-    { primary : Element.Color
-    , secondary : Element.Color
-    }
-color =
-    { primary = rgb255 5 117 230
-    , secondary = rgb255 0 242 96
-    }
+primary : Element.Color
+primary =
+    rgb255 69 35 219
+
+
+secondary : Element.Color
+secondary =
+    rgb255 217 22 89
+
+
+secondaryLight : Element.Color
+secondaryLight =
+    rgb255 236 81 135
+
+
+tertiary : Element.Color
+tertiary =
+    rgb255 136 57 245
+
+
+tertiaryLight : Element.Color
+tertiaryLight =
+    rgb255 161 92 255
+
+
+
+-- To RGB String
+
+
+toRgbString : Color -> String
+toRgbString color =
+    let
+        c =
+            toRgb color
+    in
+    String.concat
+        [ "rgb("
+        , String.fromInt (to255RgbValue c.red)
+        , ", "
+        , String.fromInt (to255RgbValue c.green)
+        , ", "
+        , String.fromInt (to255RgbValue c.blue)
+        , ")"
+        ]
+
+
+to255RgbValue : Float -> Int
+to255RgbValue value =
+    if value <= 1 then
+        round (value * 255)
+
+    else
+        round value

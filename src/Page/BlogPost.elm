@@ -5,7 +5,9 @@ module Page.BlogPost exposing
     )
 
 import Date exposing (Date)
-import Element exposing (Element)
+import Element exposing (Element, column, spacing)
+import Element.Font as Font
+import Element.Scale as Scale
 import Element.Text as Text
 import Json.Decode as Decode
 import Json.Decode.Pipeline as Decode
@@ -40,13 +42,15 @@ view : Frontmatter -> Element msg -> { title : String, body : List (Element msg)
 view frontmatter content =
     { title = frontmatter.title
     , body =
-        [ Text.date frontmatter.published
-        , title frontmatter.title
-        , content
+        [ title frontmatter.title
+        , column [ spacing Scale.large ]
+            [ Text.date frontmatter.published
+            , content
+            ]
         ]
     }
 
 
 title : String -> Element msg
 title t =
-    Text.paragraph [] [ Text.title [] (String.toTitleCase t) ]
+    Text.paragraph [ Font.center ] [ Text.headline [] (String.toTitleCase t) ]

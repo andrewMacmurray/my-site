@@ -1,6 +1,7 @@
 module Element.Layout exposing (view)
 
 import Element exposing (..)
+import Element.Animation as Animation
 import Element.Background as Background
 import Element.Border as Border
 import Element.Font as Font
@@ -39,9 +40,20 @@ layout document page =
                 , width (fill |> maximum 800)
                 , centerX
                 ]
-                document.body
+                [ pageWrapper document.body ]
             ]
         )
+
+
+pageWrapper : List (Element msg) -> Element msg
+pageWrapper =
+    column
+        [ paddingEach { edges | top = Scale.large + Scale.extraSmall }
+        , spacing Scale.extraLarge
+        , Animation.fadeIn
+        , centerX
+        , alpha 0
+        ]
 
 
 layoutWrapper : Element msg -> Html msg

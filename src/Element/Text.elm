@@ -78,7 +78,7 @@ text attrs content =
         (List.append
             [ class "f4"
             , bodyFont
-            , Font.color Palette.grey
+            , Font.color Palette.black
             ]
             attrs
         )
@@ -105,7 +105,12 @@ bold =
 
 date : Date -> Element msg
 date d =
-    tertiaryTitle [ headlineFont, Font.color Palette.black ] (Date.format "MMMM ddd, yyyy" d)
+    subtitle [ headlineFont, Font.color Palette.secondary ] (formatDate d)
+
+
+formatDate : Date -> String
+formatDate =
+    Date.format "MMM dd . yyyy" >> String.toUpper
 
 
 paragraph : List (Attribute msg) -> List (Element msg) -> Element msg

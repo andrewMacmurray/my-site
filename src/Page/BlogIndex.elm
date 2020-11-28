@@ -81,7 +81,7 @@ postIndex : BlogPost.Frontmatter -> Element msg
 postIndex metadata =
     el
         [ centerX
-        , width (maximum 800 fill)
+        , width fill
         , padding Scale.medium
         , spacing Scale.medium
         , Border.width 1
@@ -89,11 +89,6 @@ postIndex metadata =
         , mouseOver [ Border.color (rgba255 0 0 0 1) ]
         ]
         (postPreview metadata)
-
-
-readMoreLink : Element msg
-readMoreLink =
-    Text.tertiaryTitle [] "Continue reading >>"
 
 
 postPreview : BlogPost.Frontmatter -> Element msg
@@ -105,6 +100,4 @@ postPreview post =
         ]
         [ title post.title
         , Text.date post.published
-        , paragraph [] [ Text.tertiaryTitle [] post.description ]
-        , readMoreLink
         ]
