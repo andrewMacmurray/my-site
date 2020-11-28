@@ -3,6 +3,7 @@ module Page.BlogIndex exposing (findColor, view)
 import Date
 import Element exposing (..)
 import Element.Font as Font
+import Element.Palette as Palette
 import Element.Scale as Scale
 import Element.Text as Text
 import Page exposing (Page)
@@ -85,16 +86,14 @@ viewPost i { path, post } =
 
 viewPost_ : BlogPost.Color -> BlogPost.Frontmatter -> Element msg
 viewPost_ color post =
-    column [ spacing Scale.large ]
-        [ textColumn
-            [ centerX
-            , width fill
-            , spacing Scale.medium
-            ]
-            [ title color post.title
-            , Text.date [] post.published
-            ]
-        , Text.paragraph [] [ Text.tertiaryTitle [] post.description ]
+    textColumn
+        [ centerX
+        , width fill
+        , spacing Scale.medium
+        ]
+        [ title color post.title
+        , Text.date [] post.published
+        , Text.paragraph [] [ Text.text [ Font.color Palette.grey ] post.description ]
         ]
 
 
