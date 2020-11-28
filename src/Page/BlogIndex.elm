@@ -1,17 +1,29 @@
-module Page.BlogIndex exposing (view)
+module Page.BlogIndex exposing (findColor, view)
 
 import Date
 import Element exposing (..)
-import Element.Border as Border
 import Element.Font as Font
-import Element.Palette as Palette
 import Element.Scale as Scale
 import Element.Text as Text
 import Page exposing (Page)
 import Page.BlogPost as BlogPost
-import Pages
+import Page.BlogPost.Color as BlogPost
 import Pages.PagePath as PagePath exposing (PagePath)
 import Site
+import Utils.List as List
+
+
+
+-- Color
+
+
+findColor : Site.Metadata -> BlogPost.Frontmatter -> BlogPost.Color
+findColor meta post =
+    sortPosts meta
+        |> List.indexedMap (\i p -> ( BlogPost.fromIndex i, p ))
+        |> List.findFirst (\( _, p ) -> p.post.title == post.title)
+        |> Maybe.map Tuple.first
+        |> Maybe.withDefault BlogPost.defaultColor
 
 
 
@@ -21,7 +33,7 @@ import Site
 view : Site.Metadata -> { title : String, body : List (Element msg) }
 view meta =
     { title = Site.titleFor "blog"
-    , body = [ column [ centerX, width fill ] [ view_ meta ] ]
+    , body = [ view_ meta ]
     }
 
 
@@ -29,73 +41,63 @@ view_ : Site.Metadata -> Element msg
 view_ posts =
     column
         [ width fill
-        , spacing Scale.medium
+        , spacing (Scale.extraLarge + Scale.medium)
         ]
         (posts
-            |> List.filterMap getPost
-            |> List.sortWith dateDescending
-            |> List.map toSummary
+            |> sortPosts
+            |> List.indexedMap viewPost
         )
 
 
+sortPosts : Site.Metadata -> List BlogPost
+sortPosts =
+    List.filterMap getPost >> List.sortWith dateDescending
+
+
 type alias BlogPost =
-    ( Site.Path, BlogPost.Frontmatter )
+    { path : Site.Path
+    , post : BlogPost.Frontmatter
+    }
 
 
 getPost : ( Site.Path, Page ) -> Maybe BlogPost
 getPost ( path, frontmatter ) =
     case frontmatter of
         Page.BlogPost meta ->
-            Just ( path, meta )
+            Just { path = path, post = meta }
 
         _ ->
             Nothing
 
 
 dateDescending : BlogPost -> BlogPost -> Order
-dateDescending ( _, metadata1 ) ( _, metadata2 ) =
-    Date.compare metadata2.published metadata1.published
+dateDescending p1 p2 =
+    Date.compare p1.post.published p2.post.published
 
 
-toSummary : BlogPost -> Element msg
-toSummary ( postPath, post ) =
-    postIndex post |> linkToPost postPath
-
-
-linkToPost : PagePath Pages.PathKey -> Element msg -> Element msg
-linkToPost postPath content =
+viewPost : Int -> BlogPost -> Element msg
+viewPost i { path, post } =
     link [ width fill ]
-        { url = PagePath.toString postPath
-        , label = content
+        { url = PagePath.toString path
+        , label = viewPost_ (BlogPost.fromIndex i) post
         }
 
 
-title : String -> Element msg
-title text =
-    paragraph [] [ Text.title [ Font.color Palette.grey ] text ]
-
-
-postIndex : BlogPost.Frontmatter -> Element msg
-postIndex metadata =
-    el
-        [ centerX
-        , width fill
-        , padding Scale.medium
-        , spacing Scale.medium
-        , Border.width 1
-        , Border.color (rgba255 0 0 0 0.1)
-        , mouseOver [ Border.color (rgba255 0 0 0 1) ]
+viewPost_ : BlogPost.Color -> BlogPost.Frontmatter -> Element msg
+viewPost_ color post =
+    column [ spacing Scale.large ]
+        [ textColumn
+            [ centerX
+            , width fill
+            , spacing Scale.medium
+            ]
+            [ title color post.title
+            , Text.date [] post.published
+            ]
+        , Text.paragraph [] [ Text.tertiaryTitle [] post.description ]
         ]
-        (postPreview metadata)
 
 
-postPreview : BlogPost.Frontmatter -> Element msg
-postPreview post =
-    textColumn
-        [ centerX
-        , width fill
-        , spacing Scale.medium
-        ]
-        [ title post.title
-        , Text.date post.published
-        ]
+title : BlogPost.Color -> String -> Element msg
+title i text =
+    Text.paragraph [] [ Text.title [ Font.color (BlogPost.color i) ] text ]

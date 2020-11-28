@@ -39,12 +39,12 @@ contents (BlogPost x) =
 getAll :: Contentful.Response (Array BlogPost)
 getAll = Contentful.entries toBlogPost
 
-toBlogPost :: Entry { title :: String, body :: String } -> BlogPost
+toBlogPost :: Entry { title :: String, description :: String, body :: String } -> BlogPost
 toBlogPost { sys, fields } =
   BlogPost
     { type: "blog"
     , title: fields.title
-    , description: "foo"
+    , description: fields.description
     , published: sys.createdAt
     , body: fields.body
     }

@@ -103,9 +103,16 @@ bold =
     ]
 
 
-date : Date -> Element msg
-date d =
-    subtitle [ headlineFont, Font.color Palette.secondary ] (formatDate d)
+date : List (Element.Attribute msg) -> Date -> Element msg
+date attrs d =
+    subtitle
+        (List.append
+            [ headlineFont
+            , Font.color Palette.black
+            ]
+            attrs
+        )
+        (formatDate d)
 
 
 formatDate : Date -> String

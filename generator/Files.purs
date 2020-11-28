@@ -7,7 +7,7 @@ module Files
   ) where
 
 import Prelude
-import Data.String (Pattern(..), joinWith, split, toLower)
+import Data.String (Pattern(..), Replacement(..), joinWith, replace, split, toLower)
 import Effect (Effect, foreachE)
 import Effect.Class (class MonadEffect, liftEffect)
 import Effect.Class.Console (log)
@@ -41,4 +41,8 @@ fileName :: forall a. File a => a -> String
 fileName file = slugify (name file) <> ".md"
 
 slugify :: String -> String
-slugify = toLower >>> split (Pattern " ") >>> joinWith "-"
+slugify =
+  toLower
+    >>> replace (Pattern " - ") (Replacement " ")
+    >>> split (Pattern " ")
+    >>> joinWith "-"

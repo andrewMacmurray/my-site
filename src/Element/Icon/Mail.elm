@@ -101,7 +101,7 @@ icon timeline =
                     []
                 , Svg.path
                     [ d "M2.85 27C1.77 27.89.5 29.66.5 31.26V75.5C.5 78.51 3.02 81 6.08 81h69.83c1.44 0 2.52-.53 3.6-1.24C73.93 76.03 2.85 27 2.85 27z"
-                    , fill (Palette.toRgbString Palette.tertiaryLight)
+                    , fill (Palette.toRgbString Palette.tertiary)
                     , fillRule "nonzero"
                     ]
                     []

@@ -1,12 +1,14 @@
 module Element.Palette exposing
     ( black
     , grey
+    , lightGrey
     , primary
     , secondary
     , secondaryLight
     , tertiary
     , tertiaryLight
     , toRgbString
+    , white
     )
 
 import Element exposing (..)
@@ -17,14 +19,24 @@ grey =
     rgb255 115 121 115
 
 
+lightGrey : Element.Color
+lightGrey =
+    rgb255 242 242 242
+
+
 black : Element.Color
 black =
     rgb255 25 25 25
 
 
+white : Element.Color
+white =
+    rgb255 255 255 255
+
+
 primary : Element.Color
 primary =
-    rgb255 69 35 219
+    rgb255 35 116 219
 
 
 secondary : Element.Color

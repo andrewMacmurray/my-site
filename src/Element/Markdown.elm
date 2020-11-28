@@ -60,7 +60,7 @@ blockQuote =
         [ Border.widthEach { edges | left = Scale.small }
         , padding Scale.medium
         , Border.color Palette.black
-        , Background.color Palette.grey
+        , Background.color Palette.lightGrey
         ]
 
 
