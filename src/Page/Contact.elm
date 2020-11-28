@@ -2,7 +2,6 @@ module Page.Contact exposing (view)
 
 import Animator
 import Element exposing (..)
-import Element.Animation as Animation
 import Element.Font as Font
 import Element.Icon.Mail as Mail
 import Element.Scale as Scale
@@ -20,7 +19,7 @@ view timeline =
 view_ : Animator.Timeline Mail.State -> List (Element msg)
 view_ timeline =
     [ Text.headline [ centerX ] "Say Hi"
-    , column [ centerX, Animation.fadeIn, spacing Scale.medium ]
+    , column [ centerX, spacing Scale.medium ]
         [ Text.subtitle [ Font.center ] "Send me an email"
         , el [ centerX ] (Mail.icon timeline)
         ]

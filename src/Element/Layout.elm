@@ -1,7 +1,6 @@
 module Element.Layout exposing (view)
 
 import Element exposing (..)
-import Element.Animation as Animation
 import Element.Background as Background
 import Element.Border as Border
 import Element.Font as Font
@@ -50,9 +49,7 @@ pageWrapper =
     column
         [ paddingEach { edges | top = Scale.large + Scale.extraSmall }
         , spacing Scale.extraLarge
-        , Animation.fadeIn
         , centerX
-        , alpha 0
         ]
 
 

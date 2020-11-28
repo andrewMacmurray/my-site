@@ -2,7 +2,6 @@ module Page.BlogIndex exposing (view)
 
 import Date
 import Element exposing (..)
-import Element.Animation as Animation
 import Element.Border as Border
 import Element.Font as Font
 import Element.Palette as Palette
@@ -29,8 +28,7 @@ view meta =
 view_ : Site.Metadata -> Element msg
 view_ posts =
     column
-        [ Animation.fadeIn
-        , width fill
+        [ width fill
         , spacing Scale.medium
         ]
         (posts
