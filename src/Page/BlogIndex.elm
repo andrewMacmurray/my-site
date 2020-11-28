@@ -72,7 +72,7 @@ getPost ( path, frontmatter ) =
 
 dateDescending : BlogPost -> BlogPost -> Order
 dateDescending p1 p2 =
-    Date.compare p1.post.published p2.post.published
+    Date.compare p2.post.published p1.post.published
 
 
 viewPost : Int -> BlogPost -> Element msg
