@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
-    "start": "npm run generate && elm-pages develop",
+    "dev": "npm run generate && elm-pages develop",
     "serve": "npm run build && http-server ./dist -a localhost -p 3000 -c-1",
     "build": "npm run generate && elm-pages build",
     "generate": "spago run"

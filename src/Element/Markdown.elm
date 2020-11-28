@@ -24,14 +24,14 @@ view =
         >> Result.withDefault []
         >> column
             [ width fill
-            , spacingXY 0 (Scale.large + Scale.medium)
+            , spacingXY 0 Scale.large
             ]
 
 
 renderer : Markdown.Renderer.Renderer (Element msg)
 renderer =
     { heading = heading
-    , paragraph = paragraph [ class "spacing-override" ]
+    , paragraph = Text.paragraph []
     , thematicBreak = none
     , text = Text.text []
     , strong = row [ class "bold-override" ]
@@ -98,7 +98,7 @@ orderedList i items =
 
 orderedItem : Int -> Int -> List (Element msg) -> Element msg
 orderedItem start i blocks =
-    paragraph [ spacing Scale.medium, width fill ]
+    Text.paragraph [ width fill ]
         [ paragraph [ alignTop ] (text (String.fromInt (i + start) ++ " ") :: blocks) ]
 
 
@@ -141,7 +141,7 @@ tableBorder =
 
 heading : { level : Block.HeadingLevel, rawText : String, children : List (Element msg) } -> Element msg
 heading { level, rawText, children } =
-    paragraph [ spacing Scale.medium ]
+    Text.paragraph []
         [ case level of
             Block.H1 ->
                 Text.headline [] rawText
@@ -150,13 +150,16 @@ heading { level, rawText, children } =
                 Text.title [] rawText
 
             Block.H3 ->
-                Text.subtitle [ Font.bold ] rawText
+                Text.subtitle [] rawText
 
             Block.H4 ->
                 Text.subtitle [] rawText
 
-            _ ->
-                Text.text [ Font.bold ] rawText
+            Block.H5 ->
+                Text.tertiaryTitle [ Font.bold ] rawText
+
+            Block.H6 ->
+                Text.tertiaryTitle [] rawText
         ]
 
 

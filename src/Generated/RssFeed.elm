@@ -1,4 +1,4 @@
-module Site.Generated.RssFeed exposing (build)
+module Generated.RssFeed exposing (build)
 
 import Page exposing (Page(..))
 import Pages

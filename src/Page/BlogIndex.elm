@@ -93,7 +93,7 @@ postIndex metadata =
 
 readMoreLink : Element msg
 readMoreLink =
-    Text.text [] "Continue reading >>"
+    Text.tertiaryTitle [] "Continue reading >>"
 
 
 postPreview : BlogPost.Frontmatter -> Element msg
@@ -105,6 +105,6 @@ postPreview post =
         ]
         [ title post.title
         , Text.date post.published
-        , paragraph [] [ Text.text [] post.description ]
+        , paragraph [] [ Text.tertiaryTitle [] post.description ]
         , readMoreLink
         ]

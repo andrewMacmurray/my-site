@@ -40,7 +40,7 @@ view frontmatter content =
     { title = frontmatter.title
     , body =
         [ Text.date frontmatter.published
-        , paragraph [] [ Text.title [] frontmatter.title ]
+        , Text.paragraph [] [ Text.title [] frontmatter.title ]
         , content
         ]
     }

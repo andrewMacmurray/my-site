@@ -6,6 +6,7 @@ import Document.Markdown as Markdown
 import Element exposing (..)
 import Element.Icon.Mail as Mail
 import Element.Layout as Layout
+import Generated
 import Head
 import Head.Seo as Seo
 import Html exposing (Html)
@@ -18,7 +19,6 @@ import Pages exposing (PathKey)
 import Pages.Platform
 import Pages.StaticHttp as StaticHttp
 import Site
-import Site.Generated as Generated
 import Site.Manifest as Manifest
 import Time
 
@@ -132,7 +132,7 @@ pageView model meta page rendered =
             Contact.view model.mail
 
         Page.Home ->
-            Home.view rendered
+            Home.view
 
 
 
