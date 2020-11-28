@@ -141,6 +141,6 @@ headlineFont =
 bodyFont : Attribute msg
 bodyFont =
     Font.family
-        [ Font.typeface "Open sans"
+        [ Font.typeface "AbeeZee"
         , Font.typeface "helvetica"
         ]
