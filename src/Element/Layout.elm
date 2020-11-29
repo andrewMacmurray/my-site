@@ -40,6 +40,7 @@ layout document page =
                 , spacing Scale.large
                 , Region.mainContent
                 , width (fill |> maximum 800)
+                , height fill
                 , centerX
                 ]
                 [ pageWrapper document.body ]
