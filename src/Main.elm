@@ -84,7 +84,12 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Tick time ->
-            ( Animator.update time animator model, Cmd.none )
+            ( Animator.update time animator model |> loopMail, Cmd.none )
+
+
+loopMail : Model -> Model
+loopMail model =
+    { model | mail = Mail.loop model.mail }
 
 
 

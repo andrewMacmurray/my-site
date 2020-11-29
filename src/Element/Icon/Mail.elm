@@ -3,6 +3,7 @@ module Element.Icon.Mail exposing
     , State(..)
     , icon
     , init
+    , loop
     )
 
 import Animator
@@ -24,12 +25,21 @@ type alias Animation =
 type State
     = Packing
     | Packed
-    | Sending
+    | Sent
 
 
 init : Animation
 init =
     sequence (Animator.init Packed)
+
+
+loop : Animation -> Animation
+loop anim =
+    if Animator.current anim == Sent then
+        sequence anim
+
+    else
+        anim
 
 
 sequence : Animation -> Animation
@@ -40,6 +50,7 @@ sequence =
         , Animator.event (Animator.millis 1000) Packing
         , Animator.wait (Animator.millis 800)
         , Animator.event (Animator.millis 1000) Packed
+        , Animator.event (Animator.seconds 0) Sent
         ]
 
 
@@ -56,9 +67,9 @@ movement state =
             , envelopeScale = Animator.at 0
             }
 
-        Sending ->
-            { letterOffset = Animator.at 0
-            , envelopeScale = Animator.at 1
+        Sent ->
+            { letterOffset = Animator.at 60
+            , envelopeScale = Animator.at 0
             }
 
 
