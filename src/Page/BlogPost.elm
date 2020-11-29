@@ -5,10 +5,10 @@ module Page.BlogPost exposing
     )
 
 import Date exposing (Date)
-import Element exposing (Element, column, newTabLink, paragraph, spacing)
+import Element exposing (..)
 import Element.Font as Font
 import Element.Icon.Mail as Mail
-import Element.Scale as Scale
+import Element.Scale as Scale exposing (edges)
 import Element.Text as Text
 import Json.Decode as Decode
 import Json.Decode.Pipeline as Decode
@@ -44,7 +44,7 @@ view : Mail.Animation -> BlogPost.Color -> Frontmatter -> Element msg -> { title
 view anim color frontmatter content =
     { title = frontmatter.title
     , body =
-        [ column [ spacing Scale.large ]
+        [ column [ spacing Scale.large, paddingEach { edges | top = Scale.small } ]
             [ title color frontmatter.title
             , Text.date [ Font.color (BlogPost.color color) ] frontmatter.published
             , paragraph [ spacing Scale.small ] [ Text.text [ Font.color (BlogPost.color color) ] frontmatter.description ]
@@ -60,6 +60,7 @@ title color t =
     paragraph [ spacing Scale.large ] [ Text.headline [ Font.color (BlogPost.color color) ] (String.toTitleCase t) ]
 
 
+getInTouch : Mail.Animation -> BlogPost.Color -> String -> Element msg
 getInTouch anim color title_ =
     newTabLink []
         { url = "mailto:a.macmurray@icloud.com?subject=" ++ title_

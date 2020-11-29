@@ -4,7 +4,7 @@ import Date
 import Element exposing (..)
 import Element.Font as Font
 import Element.Palette as Palette
-import Element.Scale as Scale
+import Element.Scale as Scale exposing (edges)
 import Element.Text as Text
 import Page exposing (Page)
 import Page.BlogPost as BlogPost
@@ -43,6 +43,7 @@ view_ posts =
     column
         [ width fill
         , spacing (Scale.extraLarge + Scale.medium)
+        , paddingEach { edges | top = Scale.small }
         ]
         (posts
             |> sortPosts
@@ -86,7 +87,7 @@ viewPost i { path, post } =
 
 viewPost_ : BlogPost.Color -> BlogPost.Frontmatter -> Element msg
 viewPost_ color post =
-    textColumn
+    column
         [ centerX
         , width fill
         , spacing Scale.medium
