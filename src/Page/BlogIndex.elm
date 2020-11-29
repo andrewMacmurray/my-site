@@ -98,5 +98,5 @@ viewPost_ color post =
 
 
 title : BlogPost.Color -> String -> Element msg
-title i text =
-    Text.paragraph [] [ Text.title [ Font.color (BlogPost.color i) ] text ]
+title color text =
+    paragraph [ spacing Scale.medium ] [ Text.title [ Font.color (BlogPost.color color) ] text ]

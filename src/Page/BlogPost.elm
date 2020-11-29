@@ -5,7 +5,7 @@ module Page.BlogPost exposing
     )
 
 import Date exposing (Date)
-import Element exposing (Element, column, spacing)
+import Element exposing (Element, column, paragraph, spacing)
 import Element.Font as Font
 import Element.Scale as Scale
 import Element.Text as Text
@@ -43,18 +43,16 @@ view : BlogPost.Color -> Frontmatter -> Element msg -> { title : String, body : 
 view color frontmatter content =
     { title = frontmatter.title
     , body =
-        [ column [ spacing Scale.medium ]
+        [ column [ spacing Scale.large ]
             [ title color frontmatter.title
             , Text.date [ Font.color (BlogPost.color color) ] frontmatter.published
-            , Text.paragraph [] [ Text.text [ Font.color (BlogPost.color color) ] frontmatter.description ]
+            , paragraph [ spacing Scale.small ] [ Text.text [ Font.color (BlogPost.color color) ] frontmatter.description ]
             ]
-        , column [ spacing Scale.large ]
-            [ content
-            ]
+        , content
         ]
     }
 
 
 title : BlogPost.Color -> String -> Element msg
 title color t =
-    Text.paragraph [] [ Text.headline [ Font.color (BlogPost.color color) ] (String.toTitleCase t) ]
+    paragraph [ spacing Scale.large ] [ Text.headline [ Font.color (BlogPost.color color) ] (String.toTitleCase t) ]
