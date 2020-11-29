@@ -49,7 +49,7 @@ main =
 
 
 type alias Model =
-    { mail : Animator.Timeline Mail.State
+    { mail : Mail.Animation
     }
 
 
@@ -123,7 +123,7 @@ pageView : Model -> Site.Metadata -> Site.Page -> Rendered -> { title : String, 
 pageView model meta page rendered =
     case page.frontmatter of
         Page.BlogPost page_ ->
-            BlogPost.view (BlogIndex.findColor meta page_) page_ rendered
+            BlogPost.view model.mail (BlogIndex.findColor meta page_) page_ rendered
 
         Page.BlogIndex ->
             BlogIndex.view meta

@@ -5,8 +5,9 @@ module Page.BlogPost exposing
     )
 
 import Date exposing (Date)
-import Element exposing (Element, column, paragraph, spacing)
+import Element exposing (Element, column, newTabLink, paragraph, spacing)
 import Element.Font as Font
+import Element.Icon.Mail as Mail
 import Element.Scale as Scale
 import Element.Text as Text
 import Json.Decode as Decode
@@ -39,8 +40,8 @@ decoder =
 -- View
 
 
-view : BlogPost.Color -> Frontmatter -> Element msg -> { title : String, body : List (Element msg) }
-view color frontmatter content =
+view : Mail.Animation -> BlogPost.Color -> Frontmatter -> Element msg -> { title : String, body : List (Element msg) }
+view anim color frontmatter content =
     { title = frontmatter.title
     , body =
         [ column [ spacing Scale.large ]
@@ -49,6 +50,7 @@ view color frontmatter content =
             , paragraph [ spacing Scale.small ] [ Text.text [ Font.color (BlogPost.color color) ] frontmatter.description ]
             ]
         , content
+        , getInTouch anim color frontmatter.title
         ]
     }
 
@@ -56,3 +58,15 @@ view color frontmatter content =
 title : BlogPost.Color -> String -> Element msg
 title color t =
     paragraph [ spacing Scale.large ] [ Text.headline [ Font.color (BlogPost.color color) ] (String.toTitleCase t) ]
+
+
+getInTouch anim color title_ =
+    newTabLink []
+        { url = "mailto:a.macmurray@icloud.com?subject=" ++ title_
+        , label =
+            column [ spacing Scale.medium ]
+                [ Text.text [ Font.color (BlogPost.color color) ] "Have some thoughts? "
+                , Text.text [ Font.color (BlogPost.color color) ] "Let me know what you think."
+                , Mail.icon anim
+                ]
+        }

@@ -21,7 +21,7 @@ view_ timeline =
     [ Text.headline [ centerX ] "Say Hi"
     , column [ centerX, spacing Scale.extraLarge ]
         [ link [ centerX ]
-            { url = "mailto:a.macmurray@icloud.com"
+            { url = "mailto:a.macmurray@icloud.com?subject=Hi"
             , label =
                 column [ centerX, spacing Scale.medium ]
                     [ el [ centerX ] (Mail.icon timeline)

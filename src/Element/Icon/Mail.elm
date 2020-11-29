@@ -1,5 +1,6 @@
 module Element.Icon.Mail exposing
-    ( State(..)
+    ( Animation
+    , State(..)
     , icon
     , init
     )
@@ -16,18 +17,22 @@ import Svg.Attributes exposing (..)
 -- State
 
 
+type alias Animation =
+    Animator.Timeline State
+
+
 type State
     = Packing
     | Packed
     | Sending
 
 
-init : Animator.Timeline State
+init : Animation
 init =
     sequence (Animator.init Packed)
 
 
-sequence : Animator.Timeline State -> Animator.Timeline State
+sequence : Animation -> Animation
 sequence =
     Animator.queue
         [ Animator.event (Animator.seconds 0) Packed
@@ -63,7 +68,7 @@ type alias Options =
     }
 
 
-icon : Animator.Timeline State -> Element msg
+icon : Animation -> Element msg
 icon timeline =
     let
         letterOffset =
