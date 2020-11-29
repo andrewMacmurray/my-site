@@ -1,4 +1,4 @@
-module Generated.Sitemap exposing (build)
+module Site.Files.Sitemap exposing (build)
 
 import Pages.PagePath as PagePath exposing (PagePath)
 import Site

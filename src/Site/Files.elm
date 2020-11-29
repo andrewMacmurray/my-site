@@ -1,17 +1,17 @@
-module Generated exposing (files)
+module Site.Files exposing (generate)
 
-import Generated.RssFeed as RssFeed
-import Generated.Sitemap as Sitemap
 import Pages.StaticHttp as StaticHttp
-import Site
+import Site exposing (Page_)
+import Site.Files.RssFeed as RssFeed
+import Site.Files.Sitemap as Sitemap
 
 
 type alias Generated =
     Result String { path : List String, content : String }
 
 
-files : List Site.Page_ -> StaticHttp.Request (List Generated)
-files meta =
+generate : List Page_ -> StaticHttp.Request (List Generated)
+generate meta =
     StaticHttp.succeed
         (List.map Ok
             [ RssFeed.build meta

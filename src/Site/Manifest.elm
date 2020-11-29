@@ -4,6 +4,7 @@ import Color
 import Pages exposing (images, pages)
 import Pages.Manifest as Manifest
 import Pages.Manifest.Category
+import Site
 
 
 build : Manifest.Config Pages.PathKey
@@ -12,12 +13,12 @@ build =
     , categories = [ Pages.Manifest.Category.custom "technology" ]
     , displayMode = Manifest.Standalone
     , orientation = Manifest.Portrait
-    , description = "elm-pages-starter - A statically typed site generator."
+    , description = Site.description
     , iarcRatingId = Nothing
-    , name = "andrew-macmurray"
+    , name = Site.name
     , themeColor = Just Color.white
     , startUrl = pages.index
-    , shortName = Just "elm-pages-starter"
+    , shortName = Just Site.name
     , sourceIcon = images.siteLogo
     , icons = []
     }

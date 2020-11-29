@@ -4,6 +4,7 @@ module Site exposing
     , Page
     , Page_
     , Path
+    , description
     , logo
     , name
     , tagline
@@ -83,3 +84,8 @@ tagline =
 name : String
 name =
     "Andrew MacMurray"
+
+
+description : String
+description =
+    "Personal blog and website for Andrew MacMurray"

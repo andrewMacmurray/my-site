@@ -152,14 +152,8 @@ heading { level, rawText, children } =
             Block.H3 ->
                 Text.subtitle [] rawText
 
-            Block.H4 ->
-                Text.subtitle [] rawText
-
-            Block.H5 ->
+            _ ->
                 Text.tertiaryTitle [ Font.bold ] rawText
-
-            Block.H6 ->
-                Text.tertiaryTitle [] rawText
         ]
 
 

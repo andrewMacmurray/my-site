@@ -77,7 +77,7 @@ text : List (Attribute msg) -> String -> Element msg
 text attrs content =
     Element.el
         (List.append
-            [ class "f4"
+            [ class "f5"
             , bodyFont
             , Font.color Palette.black
             ]

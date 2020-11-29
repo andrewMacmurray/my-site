@@ -6,7 +6,6 @@ import Document.Markdown as Markdown
 import Element exposing (..)
 import Element.Icon.Mail as Mail
 import Element.Layout as Layout
-import Generated
 import Head
 import Head.Seo as Seo
 import Html exposing (Html)
@@ -19,6 +18,7 @@ import Pages exposing (PathKey)
 import Pages.Platform
 import Pages.StaticHttp as StaticHttp
 import Site
+import Site.Files as Files
 import Site.Manifest as Manifest
 import Time
 
@@ -40,7 +40,7 @@ main =
         , onPageChange = Nothing
         , internals = Pages.internals
         }
-        |> Pages.Platform.withFileGenerator Generated.files
+        |> Pages.Platform.withFileGenerator Files.generate
         |> Pages.Platform.toProgram
 
 
