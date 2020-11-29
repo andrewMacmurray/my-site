@@ -13,6 +13,7 @@ import Element.Text as Text
 import Json.Decode as Decode
 import Json.Decode.Pipeline as Decode
 import Page.BlogPost.Color as BlogPost
+import Site.Contact as Contact
 import String.Extra as String
 import Utils.Decode as Decode
 
@@ -63,7 +64,7 @@ title color t =
 getInTouch : Mail.Animation -> BlogPost.Color -> String -> Element msg
 getInTouch anim color title_ =
     newTabLink []
-        { url = "mailto:a.macmurray@icloud.com?subject=" ++ title_
+        { url = Contact.mailTo { subject = title_ }
         , label =
             column [ spacing Scale.medium ]
                 [ Text.text [ Font.color (BlogPost.color color) ] "Have some thoughts? "

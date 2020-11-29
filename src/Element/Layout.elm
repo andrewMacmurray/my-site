@@ -4,6 +4,8 @@ import Element exposing (..)
 import Element.Background as Background
 import Element.Border as Border
 import Element.Font as Font
+import Element.Icon.Github as Github
+import Element.Icon.SmallMail as SmallMail
 import Element.Palette as Palette
 import Element.Region as Region
 import Element.Scale as Scale exposing (edges)
@@ -13,6 +15,7 @@ import Page exposing (Page)
 import Pages
 import Pages.Directory as Directory exposing (Directory)
 import Pages.PagePath as PagePath exposing (PagePath)
+import Site.Contact as Contact
 import Utils.Element exposing (style)
 
 
@@ -30,7 +33,7 @@ layout : { a | body : List (Element msg) } -> { b | path : PagePath Pages.PathKe
 layout document page =
     layoutWrapper
         (column
-            [ width fill, spacing Scale.large ]
+            [ width fill, height fill, spacing Scale.large ]
             [ header page.path
             , column
                 [ paddingEach { edges | left = Scale.medium, right = Scale.medium, bottom = Scale.extraLarge }
@@ -40,8 +43,24 @@ layout document page =
                 , centerX
                 ]
                 [ pageWrapper document.body ]
+            , footer
             ]
         )
+
+
+footer : Element msg
+footer =
+    row [ width fill, padding Scale.medium ]
+        [ Text.text [ alignBottom, Font.color Palette.grey ] "© Andrew MacMurray 2020"
+        , row
+            [ spacing Scale.medium
+            , alignRight
+            , alignBottom
+            ]
+            [ newTabLink [] { label = Github.iconSmall, url = Contact.github.url }
+            , link [] { label = SmallMail.icon, url = Contact.mailTo { subject = "Hi" } }
+            ]
+        ]
 
 
 pageWrapper : List (Element msg) -> Element msg
