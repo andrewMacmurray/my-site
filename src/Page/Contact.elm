@@ -2,7 +2,7 @@ module Page.Contact exposing (view)
 
 import Animator
 import Element exposing (..)
-import Element.Font as Font
+import Element.Icon.Github as Github
 import Element.Icon.Mail as Mail
 import Element.Scale as Scale
 import Element.Text as Text
@@ -19,8 +19,24 @@ view timeline =
 view_ : Animator.Timeline Mail.State -> List (Element msg)
 view_ timeline =
     [ Text.headline [ centerX ] "Say Hi"
-    , column [ centerX, spacing Scale.medium ]
-        [ Text.subtitle [ Font.center ] "Send me an email"
-        , el [ centerX ] (Mail.icon timeline)
+    , column [ centerX, spacing Scale.extraLarge ]
+        [ link [ centerX ]
+            { url = "mailto:a.macmurray@icloud.com"
+            , label =
+                column [ centerX, spacing Scale.medium ]
+                    [ el [ centerX ] (Mail.icon timeline)
+                    , Text.tertiaryTitle [ centerX ] "Send me an email"
+                    , Text.link_ "a.macmurray@icloud.com"
+                    ]
+            }
+        , newTabLink [ centerX ]
+            { url = "https://github.com/andrewMacmurray"
+            , label =
+                column [ centerX, spacing Scale.medium ]
+                    [ el [ centerX ] Github.icon
+                    , Text.tertiaryTitle [ centerX ] "Follow me on Github"
+                    , el [ centerX ] (Text.link_ "@andrewMacmurray")
+                    ]
+            }
         ]
     ]

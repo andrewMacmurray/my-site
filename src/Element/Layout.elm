@@ -47,8 +47,7 @@ layout document page =
 pageWrapper : List (Element msg) -> Element msg
 pageWrapper =
     column
-        [ paddingEach { edges | top = Scale.large + Scale.extraSmall }
-        , spacing Scale.extraLarge
+        [ spacing Scale.extraLarge
         , centerX
         ]
 

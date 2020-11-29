@@ -1,6 +1,7 @@
 module Page.Home exposing (view)
 
 import Element exposing (..)
+import Element.Scale as Scale exposing (edges)
 import Element.Text as Text
 import Site
 
@@ -14,7 +15,7 @@ view =
 
 view_ : List (Element msg)
 view_ =
-    [ Text.headline [ centerX ] "Hi I'm Andrew"
+    [ Text.headline [ centerX, paddingEach { edges | top = Scale.large + Scale.extraSmall } ] "Hi I'm Andrew"
     , Text.paragraph []
         [ Text.tertiaryTitle [] "I'm a software developer working at "
         , Text.link { url = "https://8thlight.com/", text = "8th Light" }

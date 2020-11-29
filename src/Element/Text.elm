@@ -4,6 +4,7 @@ module Element.Text exposing
     , date
     , headline
     , link
+    , link_
     , paragraph
     , subtitle
     , tertiaryTitle
@@ -85,14 +86,16 @@ text attrs content =
         (Element.text content)
 
 
+link_ : String -> Element msg
+link_ =
+    tertiaryTitle [ Font.bold, Font.underline, Font.color Palette.black ]
+
+
 link : { a | url : String, text : String } -> Element msg
 link options =
-    Element.link
-        [ Font.bold
-        , Font.underline
-        ]
+    Element.newTabLink []
         { url = options.url
-        , label = tertiaryTitle [ Font.color Palette.black ] options.text
+        , label = link_ options.text
         }
 
 

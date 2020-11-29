@@ -6,4 +6,4 @@ import Svg exposing (Svg)
 
 large : Svg msg -> Element.Element msg
 large =
-    html >> el [ width (px 65) ]
+    html >> el [ width (px 50) ]
