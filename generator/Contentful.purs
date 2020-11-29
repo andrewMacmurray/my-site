@@ -14,7 +14,11 @@ import Simple.Ajax (AjaxError)
 import Simple.Ajax as Ajax
 import Simple.JSON (class ReadForeign)
 
+
+
 -- Entries
+
+
 type Entries fields
   = { items :: Array (Entry fields) }
 
@@ -28,10 +32,19 @@ type Meta
     , createdAt :: String
     }
 
+
+
+-- Response
+
+
 type Response a
   = Aff (Either AjaxError a)
 
+
+
 -- Get Entries
+
+
 entries :: forall fields a. ReadForeign fields => (Entry fields -> a) -> Response (Array a)
 entries f = entries' (_.items >>> map f)
 

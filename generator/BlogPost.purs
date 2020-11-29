@@ -5,7 +5,11 @@ import Contentful as Contentful
 import Files (class File)
 import Simple.JSON (write)
 
+
+
 -- Blog Post
+
+
 newtype BlogPost
   = BlogPost
   { fields ::
@@ -23,7 +27,11 @@ instance blogPostFile :: File BlogPost where
   fields (BlogPost x) = write x.fields
   path _ = [ "blog" ]
 
+
+
 -- Get Blog Posts
+
+
 getAll :: Contentful.Response (Array BlogPost)
 getAll = Contentful.entries toBlogPost
 

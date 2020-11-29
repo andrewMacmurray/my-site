@@ -3,6 +3,7 @@ module Element.Text exposing
     , bold
     , date
     , headline
+    , label
     , link
     , link_
     , paragraph
@@ -80,6 +81,18 @@ text attrs content =
             [ class "f5"
             , bodyFont
             , Font.color Palette.black
+            ]
+            attrs
+        )
+        (Element.text content)
+
+
+label : List (Attribute msg) -> String -> Element msg
+label attrs content =
+    Element.el
+        (List.append
+            [ bodyFont
+            , Font.size 12
             ]
             attrs
         )

@@ -17,14 +17,22 @@ import Node.Encoding as Encoding
 import Node.FS.Sync as FS
 import Simple.JSON (writeJSON)
 
+
+
 -- File
+
+
 class File a where
   name :: a -> String
   body :: a -> String
   fields :: a -> Foreign
   path :: a -> Array String
 
+
+
 -- Generate
+
+
 generate :: forall m a. File a => MonadEffect m => Array a -> m Unit
 generate files =
   liftEffect do
@@ -46,7 +54,11 @@ contents file =
     , body file
     ]
 
+
+
 -- Helpers
+
+
 filePath :: forall a. File a => a -> String
 filePath file = "./content/" <> joinWith "/" (path file) <> "/" <> fileName file
 
