@@ -2,7 +2,8 @@ module Files
   ( class File
   , name
   , path
-  , contents
+  , body
+  , fields
   , generate
   ) where
 
@@ -11,13 +12,16 @@ import Data.String (Pattern(..), Replacement(..), joinWith, replace, split, toLo
 import Effect (Effect, foreachE)
 import Effect.Class (class MonadEffect, liftEffect)
 import Effect.Class.Console (log)
+import Foreign (Foreign)
 import Node.Encoding as Encoding
 import Node.FS.Sync as FS
+import Simple.JSON (writeJSON)
 
 -- File
 class File a where
   name :: a -> String
-  contents :: a -> String
+  body :: a -> String
+  fields :: a -> Foreign
   path :: a -> Array String
 
 -- Generate
@@ -32,6 +36,15 @@ generateFile :: forall a. File a => a -> Effect Unit
 generateFile file = do
   log ("- " <> name file)
   FS.writeTextFile Encoding.UTF8 (filePath file) (contents file)
+
+contents :: forall a. File a => a -> String
+contents file =
+  joinWith "\n"
+    [ "---"
+    , writeJSON (fields file)
+    , "---"
+    , body file
+    ]
 
 -- Helpers
 filePath :: forall a. File a => a -> String

@@ -2,38 +2,26 @@ module BlogPost (getAll, BlogPost) where
 
 import Contentful (Entry)
 import Contentful as Contentful
-import Data.String (joinWith)
-import Data.Symbol (SProxy(..))
 import Files (class File)
-import Record as Record
-import Simple.JSON (writeJSON)
+import Simple.JSON (write)
 
 -- Blog Post
 newtype BlogPost
   = BlogPost
-  { type :: String
-  , title :: String
-  , description :: String
-  , published :: String
+  { fields ::
+      { type :: String
+      , title :: String
+      , description :: String
+      , published :: String
+      }
   , body :: String
   }
 
 instance blogPostFile :: File BlogPost where
-  name (BlogPost x) = x.title
-  contents = contents
+  name (BlogPost x) = x.fields.title
+  body (BlogPost x) = x.body
+  fields (BlogPost x) = write x.fields
   path _ = [ "blog" ]
-
-contents :: BlogPost -> String
-contents (BlogPost x) =
-  joinWith "\n"
-    [ "---"
-    , writeJSON (Record.delete body_ x)
-    , "---"
-    , x.body
-    ]
-  where
-  body_ :: SProxy "body"
-  body_ = SProxy
 
 -- Get Blog Posts
 getAll :: Contentful.Response (Array BlogPost)
@@ -42,9 +30,11 @@ getAll = Contentful.entries toBlogPost
 toBlogPost :: Entry { title :: String, description :: String, body :: String } -> BlogPost
 toBlogPost { sys, fields } =
   BlogPost
-    { type: "blog"
-    , title: fields.title
-    , description: fields.description
-    , published: sys.createdAt
-    , body: fields.body
+    { body: fields.body
+    , fields:
+        { type: "blog"
+        , title: fields.title
+        , description: fields.description
+        , published: sys.createdAt
+        }
     }

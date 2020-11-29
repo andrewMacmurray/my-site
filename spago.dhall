@@ -5,7 +5,6 @@
   , "effect"
   , "node-fs"
   , "psci-support"
-  , "record"
   , "simple-ajax"
   , "simple-json"
   ]
