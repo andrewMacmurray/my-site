@@ -12,5 +12,3 @@ Have you ever found yourself saying things like:
 Or
 
 > I started building my app / website with bootstrap [bulma, material UI etc], but now I need to change the look of it and it's making me want to cry 😭
-
-![A picture of bread](//images.ctfassets.net/hip278zick92/1fdsuoqNQaZjw5jcIrLiv3/2172e2671f7c317df03e664275383d70/paul_hollywoods_crusty_83536_16x9.jpg)
