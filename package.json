@@ -7,7 +7,8 @@
     "build": "elm-pages build"
   },
   "dependencies": {
-    "elm-pages": "^1.5.4"
+    "elm-pages": "^1.5.4",
+    "highlight.js": "^10.4.1"
   },
   "devDependencies": {
     "elm": "^0.19.1-3",

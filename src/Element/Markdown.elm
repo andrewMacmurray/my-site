@@ -175,6 +175,5 @@ codeBlock details =
         , style "overflow-wrap" "break-word"
         , style "word-break" "break-word"
         , class "f4"
-        , padding Scale.medium
         ]
-        [ html (Html.code [] [ Html.text details.body ]) ]
+        [ html (Html.node "hljs-el" [] [ Html.code [] [ Html.text details.body ] ]) ]
