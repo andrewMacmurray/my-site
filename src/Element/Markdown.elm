@@ -93,13 +93,12 @@ toImage img =
 
 orderedList : Int -> List (List (Element msg)) -> Element msg
 orderedList i items =
-    column [ spacing Scale.medium ] (List.indexedMap (orderedItem i) items)
+    column [ spacing Scale.small, paddingEach { edges | left = Scale.small } ] (List.indexedMap (orderedItem i) items)
 
 
 orderedItem : Int -> Int -> List (Element msg) -> Element msg
 orderedItem start i blocks =
-    Text.paragraph [ width fill ]
-        [ paragraph [ alignTop ] (text (String.fromInt (i + start) ++ " ") :: blocks) ]
+    Text.paragraph [ alignTop ] (Text.tertiaryTitle [ Font.color Palette.secondary, Font.bold ] (String.fromInt (i + start) ++ ". ") :: blocks)
 
 
 unorderedList : List (ListItem (Element msg)) -> Element msg
@@ -159,12 +158,13 @@ heading { level, rawText, children } =
 
 code : String -> Element msg
 code snippet =
-    Element.el
+    Text.text
         [ Background.color (rgba 0 0 0 0.04)
+        , Font.color Palette.secondary
         , Border.rounded 2
         , paddingXY 5 3
         ]
-        (Element.text snippet)
+        snippet
 
 
 codeBlock : { body : String, language : Maybe String } -> Element msg
