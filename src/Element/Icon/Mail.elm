@@ -93,13 +93,13 @@ icon timeline =
             [ Svg.g []
                 [ Svg.path
                     [ d "M41 55s28.8-20.63 38.5-27.51A4.94 4.94 0 0075.9 26H6.1c-1.44 0-2.7.56-3.6 1.49L41 55z"
-                    , fill (Palette.toRgbString Palette.primary)
+                    , fill (Palette.toRgbString Palette.secondaryLight)
                     , fillRule "nonzero"
                     ]
                     []
                 , Svg.path
                     [ d "M41 0s28.8 20.63 38.5 27.51A4.94 4.94 0 0175.9 29H6.1c-1.44 0-2.7-.56-3.6-1.49L41 0z"
-                    , fill (Palette.toRgbString Palette.primary)
+                    , fill (Palette.toRgbString Palette.secondaryLight)
                     , fillRule "nonzero"
                     , style ("transform-origin: 41px 27px; transform: scale(1, " ++ String.fromFloat envelopeScale ++ ")")
                     ]

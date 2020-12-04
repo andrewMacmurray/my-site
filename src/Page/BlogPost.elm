@@ -68,7 +68,7 @@ getInTouch anim color title_ =
         , label =
             column [ spacing Scale.medium ]
                 [ Text.text [ Font.color (BlogPost.color color) ] "Have some thoughts? "
-                , Text.text [ Font.color (BlogPost.color color) ] "Let me know what you think."
+                , Text.text [ Font.color (BlogPost.color color) ] "Let me know in an email."
                 , Mail.icon anim
                 ]
         }

@@ -3,15 +3,14 @@ module Element.Palette exposing
     , grey
     , lightGrey
     , primary
+    , primaryLight
     , secondary
     , secondaryLight
     , tertiary
-    , tertiaryLight
     , toRgbString
-    , white
     )
 
-import Element exposing (..)
+import Element exposing (rgb255, toRgb)
 
 
 grey : Element.Color
@@ -29,14 +28,14 @@ black =
     rgb255 25 25 25
 
 
-white : Element.Color
-white =
-    rgb255 255 255 255
-
-
 primary : Element.Color
 primary =
     rgb255 35 116 219
+
+
+primaryLight : Element.Color
+primaryLight =
+    rgb255 97 164 246
 
 
 secondary : Element.Color
@@ -51,19 +50,14 @@ secondaryLight =
 
 tertiary : Element.Color
 tertiary =
-    rgb255 136 57 245
-
-
-tertiaryLight : Element.Color
-tertiaryLight =
-    rgb255 161 92 255
+    rgb255 109 20 230
 
 
 
 -- To RGB String
 
 
-toRgbString : Color -> String
+toRgbString : Element.Color -> String
 toRgbString color =
     let
         c =

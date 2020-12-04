@@ -1,8 +1,10 @@
 module Page exposing
     ( Page(..)
-    , decoder
+    , document
     )
 
+import Element exposing (Element)
+import Element.Markdown as Markdown
 import Json.Decode as Decode exposing (Decoder)
 import Page.BlogPost as BlogPost
 
@@ -19,7 +21,15 @@ type Page
 
 
 
--- Decoder
+-- Markdown Document
+
+
+document : { extension : String, metadata : Decoder Page, body : String -> Result error (Element msg) }
+document =
+    { extension = "md"
+    , metadata = decoder
+    , body = Markdown.view >> Ok
+    }
 
 
 decoder : Decoder Page

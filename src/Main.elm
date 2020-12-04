@@ -2,7 +2,6 @@ module Main exposing (main)
 
 import Animator exposing (Animator)
 import Date
-import Document.Markdown as Markdown
 import Element exposing (..)
 import Element.Icon.Mail as Mail
 import Element.Layout as Layout
@@ -34,7 +33,7 @@ main =
         , view = view
         , update = update
         , subscriptions = always (always subscriptions)
-        , documents = [ Markdown.document ]
+        , documents = [ Page.document ]
         , manifest = Manifest.build
         , canonicalSiteUrl = Site.url
         , onPageChange = Nothing
