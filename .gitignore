@@ -6,9 +6,6 @@ gen/
 .idea
 .env
 
-content/blog/*
-!content/blog/index.md
-
 .spago
 output
 .psc-ide-port
