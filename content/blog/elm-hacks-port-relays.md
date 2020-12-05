@@ -68,7 +68,7 @@ BreadResponseReceived (Ok bread) ->
     , ShowSuccess "Success!✨🍞🎉"
     )
 
-BreadResponseReceived (Err bread) ->
+BreadResponseReceived (Err _) ->
     ( model
     , Cmd.none
     , ShowError "No Bread 😭"
