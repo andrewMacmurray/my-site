@@ -1,5 +1,16 @@
-import hljs from "highlight.js";
+import hljs from "highlight.js/lib/core";
 import "../node_modules/highlight.js/styles/solarized-light.css";
+
+// Register Languages
+
+registerLanguage("elm");
+registerLanguage("javascript");
+
+function registerLanguage(lang) {
+  hljs.registerLanguage(lang, require(`highlight.js/lib/languages/${lang}`));
+}
+
+// Custom Element
 
 class CodeElement extends HTMLElement {
   connectedCallback() {

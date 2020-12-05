@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=ABeeZee&family=Roboto+Mono:wght@400;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=ABeeZee&family=Roboto+Mono:wght@400;700&display=swap");
 
 /* Fonts */
 
@@ -20,6 +20,10 @@
 
 .f5 {
   font-size: 16px !important;
+}
+
+.f6 {
+  font-size: 12px !important;
 }
 
 .spacing-override {
@@ -45,6 +49,10 @@
 
   .f5 {
     font-size: 18px !important;
+  }
+
+  .f6 {
+    font-size: 14px !important;
   }
 
   .spacing-override {

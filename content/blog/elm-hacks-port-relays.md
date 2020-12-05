@@ -63,10 +63,16 @@ Another way to do this is to return a piece of data out of a page `update` and `
 
 ```
 BreadResponseReceived (Ok bread) ->
-    ( { model | bread = bread }, Cmd.none, ShowSuccess "Success!✨🍞🎉" )
+    ( { model | bread = bread }
+    , Cmd.none
+    , ShowSuccess "Success!✨🍞🎉"
+    )
 
 BreadResponseReceived (Err bread) ->
-    ( model, Cmd.none, ShowError "No Bread 😭" )
+    ( model
+    , Cmd.none
+    , ShowError "No Bread 😭"
+    )
 ```
 
 You can even specialise this pattern further by replacing `Cmd` alltogether with a custom type - [this thread](https://discourse.elm-lang.org/t/realworld-example-app-architected-with-the-effect-pattern/5753) goes into detail about how the `Effect` pattern works.
@@ -84,7 +90,9 @@ However I've found in practice quite a few annoyances with this:
 This is something I tried recently - it feels a bit hacky but I quite like how low maintenance it's been. What if we could do something like:
 
 ```
-({ model | bread = bread }, Flash.success "Success!✨🍞🎉")
+( { model | bread = bread }
+, Flash.success "Success!✨🍞🎉"
+)
 ```
 
 And the success message shows up? If we define some ports we can:
@@ -122,7 +130,9 @@ subscriptions model =
 --- In Update
 
 SuccessTriggered message ->
-    ( { model | context = updateSuccess message model.context }, Cmd.none )
+    ( { model | context = updateSuccess message model.context }
+    , Cmd.none
+    )
 ```
 
 It's a cheeky escape hatch! I like to call it a `port  relay`

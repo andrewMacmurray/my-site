@@ -174,6 +174,6 @@ codeBlock details =
         , style "white-space" "pre-wrap"
         , style "overflow-wrap" "break-word"
         , style "word-break" "break-word"
-        , class "f4"
+        , class "f6"
         ]
         [ html (Html.node "hljs-el" [] [ Html.code [] [ Html.text details.body ] ]) ]
