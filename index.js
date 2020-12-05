@@ -1,17 +1,9 @@
-import "./style.css";
-import "./node_modules/highlight.js/styles/solarized-light.css";
-import hljs from "highlight.js";
+import "./css/style.css";
+import { Elm } from "./src/Main.elm";
+import pagesInit from "elm-pages";
+import * as CodeElement from "./js/code-element";
 
-const { Elm } = require("./src/Main.elm");
-const pagesInit = require("elm-pages");
-
-class CodeElement extends HTMLElement {
-  connectedCallback() {
-    hljs.highlightBlock(this);
-  }
-}
-
-window.customElements.define("hljs-el", CodeElement);
+CodeElement.register();
 
 pagesInit({
   mainElmModule: Elm.Main,

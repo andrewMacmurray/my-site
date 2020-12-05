@@ -9,7 +9,7 @@ You're working on an Elm app, and implementing a feature in a `page` module (one
 
 Then you get to a point where you need to show a success or error message to the user:
 
-![success](/images/success-banner.svg)
+![success](/images/success-banner.png)
 
 You've done this on so many pages before, and it feels kind of annoying to have to manually include it in every page model and page view. There must be a nicer way of doing this?
 
