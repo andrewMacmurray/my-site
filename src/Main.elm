@@ -1,9 +1,7 @@
 module Main exposing (main)
 
-import Animator exposing (Animator)
 import Date
 import Element exposing (..)
-import Element.Icon.Mail as Mail
 import Element.Layout as Layout
 import Head
 import Head.Seo as Seo
@@ -19,7 +17,6 @@ import Pages.StaticHttp as StaticHttp
 import Site
 import Site.Files as Files
 import Site.Manifest as Manifest
-import Time
 
 
 
@@ -48,12 +45,11 @@ main =
 
 
 type alias Model =
-    { mail : Mail.Animation
-    }
+    {}
 
 
 type Msg
-    = Tick Time.Posix
+    = NoOp
 
 
 type alias Rendered =
@@ -71,8 +67,7 @@ init =
 
 initialModel : Model
 initialModel =
-    { mail = Mail.init
-    }
+    {}
 
 
 
@@ -82,13 +77,8 @@ initialModel =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        Tick time ->
-            ( Animator.update time animator model |> loopMail, Cmd.none )
-
-
-loopMail : Model -> Model
-loopMail model =
-    { model | mail = Mail.loop model.mail }
+        NoOp ->
+            ( model, Cmd.none )
 
 
 
@@ -96,13 +86,8 @@ loopMail model =
 
 
 subscriptions : Model -> Sub Msg
-subscriptions model =
-    Animator.toSubscription Tick model animator
-
-
-animator : Animator Model
-animator =
-    Animator.animator |> Animator.watching .mail (\v model -> { model | mail = v })
+subscriptions _ =
+    Sub.none
 
 
 
@@ -127,13 +112,13 @@ pageView : Model -> Site.Metadata -> Site.Page -> Rendered -> { title : String, 
 pageView model meta page rendered =
     case page.frontmatter of
         Page.BlogPost page_ ->
-            BlogPost.view model.mail (BlogIndex.findColor meta page_) page_ rendered
+            BlogPost.view (BlogIndex.findColor meta page_) page_ rendered
 
         Page.BlogIndex ->
             BlogIndex.view meta
 
         Page.Contact ->
-            Contact.view model.mail
+            Contact.view
 
         Page.Home ->
             Home.view

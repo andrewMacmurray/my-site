@@ -1,5 +1,8 @@
-module Element.Icon.Github exposing (icon, iconSmall)
+module Element.Icon.Github exposing (large, small)
 
+import Animation exposing (Animation)
+import Animation.Animated as Animated
+import Animation.Property as P
 import Element exposing (Element)
 import Element.Icon as Icon
 import Element.Palette as Palette
@@ -7,14 +10,28 @@ import Svg exposing (Svg)
 import Svg.Attributes exposing (..)
 
 
-iconSmall : Element msg
-iconSmall =
+small : Element msg
+small =
     Icon.small (icon_ Palette.black)
 
 
-icon : Element msg
-icon =
-    Icon.large (icon_ Palette.primary)
+large : Element msg
+large =
+    Animated.el spinAndJump [] (Icon.large (icon_ Palette.primary))
+
+
+spinAndJump : Animation
+spinAndJump =
+    Animation.steps [ Animation.loop ]
+        [ P.rotate 0 ]
+        [ Animation.wait 500
+        , Animation.step 1300 [ P.rotate 360 ]
+        , Animation.wait 100
+        , Animation.step 50 [ P.y 1 ]
+        , Animation.step 200 [ P.y -8 ]
+        , Animation.step 200 [ P.y 0 ]
+        , Animation.wait 500
+        ]
 
 
 icon_ : Element.Color -> Svg msg

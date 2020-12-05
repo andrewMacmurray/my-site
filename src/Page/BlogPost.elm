@@ -41,8 +41,8 @@ decoder =
 -- View
 
 
-view : Mail.Animation -> BlogPost.Color -> Frontmatter -> Element msg -> { title : String, body : List (Element msg) }
-view anim color frontmatter content =
+view : BlogPost.Color -> Frontmatter -> Element msg -> { title : String, body : List (Element msg) }
+view color frontmatter content =
     { title = frontmatter.title
     , body =
         [ column [ spacing Scale.large, paddingEach { edges | top = Scale.small } ]
@@ -51,7 +51,7 @@ view anim color frontmatter content =
             , paragraph [ spacing Scale.small ] [ Text.text [ Font.color (BlogPost.color color) ] frontmatter.description ]
             ]
         , content
-        , getInTouch anim color frontmatter.title
+        , getInTouch color frontmatter.title
         ]
     }
 
@@ -61,14 +61,14 @@ title color t =
     paragraph [ spacing Scale.large ] [ Text.headline [ Font.color (BlogPost.color color) ] (String.toTitleCase t) ]
 
 
-getInTouch : Mail.Animation -> BlogPost.Color -> String -> Element msg
-getInTouch anim color title_ =
+getInTouch : BlogPost.Color -> String -> Element msg
+getInTouch color title_ =
     newTabLink []
         { url = Contact.mailTo { subject = title_ }
         , label =
             column [ spacing Scale.medium ]
                 [ Text.text [ Font.color (BlogPost.color color) ] "Have some thoughts? "
                 , Text.text [ Font.color (BlogPost.color color) ] "Let me know in an email."
-                , Mail.icon anim
+                , Mail.icon
                 ]
         }

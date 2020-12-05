@@ -60,20 +60,6 @@
   }
 }
 
-/* Animations */
-
-@keyframes expand-fade {
-  from {
-    opacity: 1;
-    transform: scale(0.9);
-  }
-
-  to {
-    opacity: 0;
-    transform: scale(2);
-  }
-}
-
 .bold-override div div {
   font-weight: bold;
   color: rgb(56, 58, 60);

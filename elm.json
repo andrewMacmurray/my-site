@@ -23,7 +23,6 @@
             "elm-community/list-extra": "8.2.4",
             "elm-community/string-extra": "4.0.1",
             "justinmimbs/date": "3.2.1",
-            "mdgriffith/elm-animator": "1.1.1",
             "mdgriffith/elm-ui": "1.1.8"
         },
         "indirect": {
@@ -41,7 +40,6 @@
             "elm-community/dict-extra": "2.4.0",
             "elm-community/result-extra": "2.4.0",
             "fredcy/elm-parseint": "2.0.1",
-            "ianmackenzie/elm-units": "2.7.0",
             "justinmimbs/time-extra": "1.1.0",
             "lazamar/dict-parser": "1.0.2",
             "lukewestby/elm-string-interpolate": "1.0.4",

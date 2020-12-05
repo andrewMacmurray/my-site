@@ -1,5 +1,8 @@
 module Element.Layout exposing (view)
 
+import Animation
+import Animation.Animated as Animated
+import Animation.Property as P
 import Element exposing (..)
 import Element.Background as Background
 import Element.Border as Border
@@ -16,7 +19,6 @@ import Pages
 import Pages.Directory as Directory exposing (Directory)
 import Pages.PagePath as PagePath exposing (PagePath)
 import Site.Contact as Contact
-import Utils.Element exposing (style)
 
 
 view :
@@ -58,7 +60,7 @@ footer =
             , alignRight
             , alignBottom
             ]
-            [ newTabLink [] { label = Github.iconSmall, url = Contact.github.url }
+            [ newTabLink [] { label = Github.small, url = Contact.github.url }
             , link [] { label = SmallMail.icon, url = Contact.mailTo { subject = "Hi" } }
             ]
         ]
@@ -103,8 +105,15 @@ dot : Element msg
 dot =
     row [ spacing Scale.extraSmall ]
         [ el [] (text "a")
-        , el [ inFront (el [ style "animation" "2s expand-fade infinite" ] dot_) ] dot_
+        , el [ inFront (Animated.el expandFade [] dot_) ] dot_
         ]
+
+
+expandFade =
+    Animation.fromTo 2000
+        [ Animation.loop ]
+        [ P.scale 1, P.opacity 1 ]
+        [ P.scale 2, P.opacity 0 ]
 
 
 dot_ : Element msg

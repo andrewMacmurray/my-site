@@ -1,12 +1,8 @@
-module Element.Icon.Mail exposing
-    ( Animation
-    , State(..)
-    , icon
-    , init
-    , loop
-    )
+module Element.Icon.Mail exposing (icon)
 
-import Animator
+import Animation exposing (Animation)
+import Animation.Animated as Animated
+import Animation.Property as P
 import Element exposing (Element)
 import Element.Icon as Icon
 import Element.Palette as Palette
@@ -14,80 +10,8 @@ import Svg
 import Svg.Attributes exposing (..)
 
 
-
--- State
-
-
-type alias Animation =
-    Animator.Timeline State
-
-
-type State
-    = Packing
-    | Packed
-    | Sent
-
-
-init : Animation
-init =
-    sequence (Animator.init Packed)
-
-
-loop : Animation -> Animation
-loop anim =
-    if Animator.current anim == Sent then
-        sequence anim
-
-    else
-        anim
-
-
-sequence : Animation -> Animation
-sequence =
-    Animator.queue
-        [ Animator.event (Animator.seconds 0) Packed
-        , Animator.wait (Animator.millis 300)
-        , Animator.event (Animator.millis 1000) Packing
-        , Animator.wait (Animator.millis 800)
-        , Animator.event (Animator.millis 1000) Packed
-        , Animator.event (Animator.seconds 0) Sent
-        ]
-
-
-movement : State -> { letterOffset : Animator.Movement, envelopeScale : Animator.Movement }
-movement state =
-    case state of
-        Packing ->
-            { letterOffset = Animator.at 0
-            , envelopeScale = Animator.at 1 |> Animator.leaveLate 0.2
-            }
-
-        Packed ->
-            { letterOffset = Animator.at 60
-            , envelopeScale = Animator.at 0
-            }
-
-        Sent ->
-            { letterOffset = Animator.at 60
-            , envelopeScale = Animator.at 0
-            }
-
-
-type alias Options =
-    { letterOffset : Float
-    , envelopeScale : Float
-    }
-
-
-icon : Animation -> Element msg
-icon timeline =
-    let
-        letterOffset =
-            Animator.move timeline (movement >> .letterOffset)
-
-        envelopeScale =
-            Animator.move timeline (movement >> .envelopeScale)
-    in
+icon : Element msg
+icon =
     Icon.large
         (Svg.svg [ viewBox "0 -10 82 91", width "100%" ]
             [ Svg.g []
@@ -97,19 +21,20 @@ icon timeline =
                     , fillRule "nonzero"
                     ]
                     []
-                , Svg.path
+                , Animated.svg openCloseEnvelope
+                    Svg.path
                     [ d "M41 0s28.8 20.63 38.5 27.51A4.94 4.94 0 0175.9 29H6.1c-1.44 0-2.7-.56-3.6-1.49L41 0z"
                     , fill (Palette.toRgbString Palette.secondaryLight)
                     , fillRule "nonzero"
-                    , style ("transform-origin: 41px 27px; transform: scale(1, " ++ String.fromFloat envelopeScale ++ ")")
+                    , style "transform-origin: 41px 27px"
                     ]
                     []
-                , Svg.rect
+                , Animated.svg letterUpDown
+                    Svg.rect
                     [ stroke "#D4AB42"
                     , strokeWidth "3"
                     , fill "#FFFBF1"
                     , x "13.01"
-                    , y (String.fromFloat letterOffset)
                     , width "58"
                     , height "66"
                     , rx "3"
@@ -130,3 +55,24 @@ icon timeline =
                 ]
             ]
         )
+
+
+letterUpDown : Animation
+letterUpDown =
+    Animation.steps [ Animation.loop, Animation.zippy ]
+        [ P.property "y" "60" ]
+        [ Animation.wait 200
+        , Animation.step 800 [ P.property "y" "0" ]
+        , Animation.wait 800
+        , Animation.step 1200 [ P.property "y" "60" ]
+        ]
+
+
+openCloseEnvelope : Animation
+openCloseEnvelope =
+    Animation.steps [ Animation.loop, Animation.zippy ]
+        [ P.scaleXY 1 0 ]
+        [ Animation.step 1000 [ P.scaleXY 1 1 ]
+        , Animation.wait 1000
+        , Animation.step 1000 [ P.scaleXY 1 0 ]
+        ]

@@ -9,22 +9,22 @@ import Site
 import Site.Contact as Contact
 
 
-view : Mail.Animation -> { title : String, body : List (Element msg) }
-view timeline =
+view : { title : String, body : List (Element msg) }
+view =
     { title = Site.titleFor "contact"
-    , body = view_ timeline
+    , body = view_
     }
 
 
-view_ : Mail.Animation -> List (Element msg)
-view_ timeline =
+view_ : List (Element msg)
+view_ =
     [ Text.headline [ centerX ] "Say Hi"
     , column [ centerX, spacing Scale.extraLarge ]
         [ link [ centerX ]
             { url = Contact.mailTo { subject = "Hi" }
             , label =
                 column [ centerX, spacing Scale.medium ]
-                    [ el [ centerX ] (Mail.icon timeline)
+                    [ el [ centerX ] Mail.icon
                     , Text.tertiaryTitle [ centerX ] "Send me an email"
                     , Text.link_ Contact.email
                     ]
@@ -33,7 +33,7 @@ view_ timeline =
             { url = Contact.github.url
             , label =
                 column [ centerX, spacing Scale.medium ]
-                    [ el [ centerX ] Github.icon
+                    [ el [ centerX ] Github.large
                     , Text.tertiaryTitle [ centerX ] "Follow me on Github"
                     , el [ centerX ] (Text.link_ Contact.github.handle)
                     ]
