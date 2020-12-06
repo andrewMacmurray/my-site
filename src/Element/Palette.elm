@@ -7,7 +7,7 @@ module Element.Palette exposing
     , secondary
     , secondaryLight
     , tertiary
-    , toRgbString
+    , toString
     )
 
 import Element exposing (rgb255, toRgb)
@@ -57,8 +57,8 @@ tertiary =
 -- To RGB String
 
 
-toRgbString : Element.Color -> String
-toRgbString color =
+toString : Element.Color -> String
+toString color =
     let
         c =
             toRgb color

@@ -1,6 +1,7 @@
 module Animation.Animated exposing
     ( div
     , el
+    , g
     , row
     , svg
     )
@@ -34,6 +35,11 @@ row anim attrs =
 svg : Animation -> (List (Svg.Attribute msg) -> List (Svg a) -> b) -> List (Svg.Attribute msg) -> List (Svg a) -> b
 svg anim node_ attrs els =
     node_ (Svg.Attributes.class (Animation.name anim) :: attrs) (stylesheet_ anim :: els)
+
+
+g : Animation -> List (Svg.Attribute msg) -> List (Svg msg) -> Svg msg
+g anim =
+    svg anim Svg.g
 
 
 

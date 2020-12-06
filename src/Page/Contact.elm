@@ -24,7 +24,7 @@ view_ =
             { url = Contact.mailTo { subject = "Hi" }
             , label =
                 column [ centerX, spacing Scale.medium ]
-                    [ el [ centerX ] Mail.icon
+                    [ el [ centerX, moveUp 2 ] Mail.icon
                     , Text.tertiaryTitle [ centerX ] "Send me an email"
                     , Text.link_ Contact.email
                     ]

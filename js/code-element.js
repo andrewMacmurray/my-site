@@ -1,5 +1,5 @@
 import hljs from "highlight.js/lib/core";
-import "../node_modules/highlight.js/styles/solarized-light.css";
+import "../node_modules/highlight.js/styles/a11y-dark.css";
 
 // Register Languages
 

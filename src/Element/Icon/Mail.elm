@@ -12,59 +12,75 @@ import Svg.Attributes exposing (..)
 
 icon : Element msg
 icon =
-    Icon.large
-        (Svg.svg [ viewBox "0 -10 82 91", width "100%" ]
-            [ Svg.g []
+    Element.el [ Element.scale 1.2 ]
+        (Icon.large
+            (Svg.svg [ viewBox "0 0 50 50" ]
                 [ Svg.path
-                    [ d "M41 55s28.8-20.63 38.5-27.51A4.94 4.94 0 0075.9 26H6.1c-1.44 0-2.7.56-3.6 1.49L41 55z"
-                    , fill (Palette.toRgbString Palette.secondaryLight)
+                    [ fill (Palette.toString Palette.secondaryLight)
                     , fillRule "nonzero"
+                    , d "M25.5 34.6l19.3-15.3c-.5-.5-1.1-.9-1.8-.9H8c-.7 0-1.3.4-1.7.9l19.2 15.3z"
                     ]
                     []
                 , Animated.svg openCloseEnvelope
                     Svg.path
-                    [ d "M41 0s28.8 20.63 38.5 27.51A4.94 4.94 0 0175.9 29H6.1c-1.44 0-2.7-.56-3.6-1.49L41 0z"
-                    , fill (Palette.toRgbString Palette.secondaryLight)
+                    [ fill (Palette.toString Palette.secondaryLight)
                     , fillRule "nonzero"
-                    , style "transform-origin: 41px 27px"
+                    , d "M25.5 4l19.3 15.3c-.5.5-1.1.8-1.8.8H8c-.7 0-1.3-.3-1.7-.8L25.5 4z"
+                    , style "transform-origin: 25px 19px"
                     ]
                     []
-                , Animated.svg letterUpDown
-                    Svg.rect
-                    [ stroke "#D4AB42"
-                    , strokeWidth "3"
-                    , fill "#FFFBF1"
-                    , x "13.01"
-                    , width "58"
-                    , height "66"
-                    , rx "3"
+                , Animated.g letterUpDown
+                    []
+                    [ Svg.g [ transform "translate(10.5 8.4)" ]
+                        (Svg.rect [ width "28.5", height "36.3", x "1", y "1", fill "#FFFBF1", stroke "#D4AB42", strokeWidth "2", rx "2" ] []
+                            :: List.indexedMap (\i el -> Animated.g (fadeInLine i) [ transform "translate(0, 1)" ] [ el ])
+                                [ Svg.path [ fill (Palette.toString Palette.primary), d "M6 5.6h18.5v1.7H6z" ] []
+                                , Svg.path [ fill (Palette.toString Palette.primary), d "M6 10h18.5v1.7H6z" ] []
+                                , Svg.path [ fill (Palette.toString Palette.primary), d "M6 14.4h18.5v1.7H6z" ] []
+                                ]
+                        )
+                    ]
+                , Svg.path
+                    [ fill (Palette.toString Palette.tertiary)
+                    , fillRule "nonzero"
+                    , d "M6.4 19c-.5.5-1.1 1.5-1.1 2.4v24.5C5.3 47.6 6.5 49 8 49h35a3 3 0 001.8-.7C42 46.3 6.4 19 6.4 19z"
                     ]
                     []
                 , Svg.path
-                    [ d "M2.85 27C1.77 27.89.5 29.66.5 31.26V75.5C.5 78.51 3.02 81 6.08 81h69.83c1.44 0 2.52-.53 3.6-1.24C73.93 76.03 2.85 27 2.85 27z"
-                    , fill (Palette.toRgbString Palette.tertiary)
+                    [ fill (Palette.toString Palette.secondaryLight)
                     , fillRule "nonzero"
+                    , d "M44.8 19A388.5 388.5 0 0125 33.3c.2 0 16.8 13 19.7 15.1.6-.6 1-1.3 1-2.2v-25c0-.5-.3-1.3-1-2.2z"
                     ]
                     []
-                , Svg.path
-                    [ d "M79.5 27c-9.84 6.63-39 26.5-39 26.5.37.18 33.17 22.74 38.82 26.5 1.27-1.07 2.19-2.5 2.19-4.12V31.12a6.83 6.83 0 00-2-4.12z"
-                    , fill (Palette.toRgbString Palette.secondaryLight)
-                    , fillRule "nonzero"
-                    ]
-                    []
+                , Svg.rect [ y "49", fill "#fff", width "50", height "2" ] []
                 ]
-            ]
+            )
         )
+
+
+fadeInLine : Animation.Millis -> Animation
+fadeInLine delay =
+    Animation.steps
+        [ Animation.loop
+        , Animation.delay (delay * 200)
+        ]
+        [ P.opacity 0 ]
+        [ Animation.wait 700
+        , Animation.step 200 [ P.opacity 1 ]
+        , Animation.wait 2800
+        , Animation.set [ P.opacity 0 ]
+        , Animation.waitTillComplete letterUpDown
+        ]
 
 
 letterUpDown : Animation
 letterUpDown =
     Animation.steps [ Animation.loop, Animation.zippy ]
-        [ P.property "y" "60" ]
+        [ P.y 50 ]
         [ Animation.wait 200
-        , Animation.step 800 [ P.property "y" "0" ]
-        , Animation.wait 800
-        , Animation.step 1200 [ P.property "y" "60" ]
+        , Animation.step 800 [ P.y 0 ]
+        , Animation.wait 1800
+        , Animation.step 1200 [ P.y 50 ]
         ]
 
 
@@ -73,6 +89,7 @@ openCloseEnvelope =
     Animation.steps [ Animation.loop, Animation.zippy ]
         [ P.scaleXY 1 0 ]
         [ Animation.step 1000 [ P.scaleXY 1 1 ]
-        , Animation.wait 1000
+        , Animation.wait 2000
         , Animation.step 1000 [ P.scaleXY 1 0 ]
+        , Animation.waitTillComplete letterUpDown
         ]

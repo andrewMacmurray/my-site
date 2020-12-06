@@ -4,16 +4,16 @@ module Animation exposing
     , Option
     , cubic
     , delay
-    , frame
-    , frames
     , fromTo
     , linear
     , loop
     , name
+    , set
     , step
     , steps
     , stylesheet
     , wait
+    , waitTillComplete
     , zippy
     )
 
@@ -41,18 +41,32 @@ type Steps
 type Step
     = Step Millis (List Property)
     | Wait Millis
+    | WaitTillComplete Millis
 
 
+steps : List Option -> List Property -> List Step -> Animation
 steps options firstFrame steps_ =
     Steps options firstFrame steps_ |> stepsToAnimation
 
 
+step : Millis -> List Property -> Step
 step =
     Step
 
 
+wait : Millis -> Step
 wait =
     Wait
+
+
+waitTillComplete : Animation -> Step
+waitTillComplete =
+    duration_ >> WaitTillComplete
+
+
+set : List Property -> Step
+set =
+    Step 1
 
 
 stepsToAnimation : Steps -> Animation
@@ -60,17 +74,30 @@ stepsToAnimation (Steps opts firstFrame nextFrames) =
     Animation (totalDuration nextFrames) (toStepFrames firstFrame nextFrames :: opts)
 
 
+totalDuration : List Step -> Millis
 totalDuration =
-    List.map stepDuration >> List.sum
+    List.foldl accumDuration 0
 
 
-stepDuration step_ =
+accumDuration step_ curr =
     case step_ of
         Step d _ ->
-            d
+            d + curr
 
         Wait d ->
-            d
+            d + curr
+
+        WaitTillComplete d ->
+            adjustCompleteWait d curr
+
+
+adjustCompleteWait : number -> number -> number
+adjustCompleteWait dur curr =
+    if dur - curr >= 1 then
+        curr + (dur - curr)
+
+    else
+        curr + 1
 
 
 toStepFrames : List Property -> List Step -> Option
@@ -91,11 +118,19 @@ toFrames firstFrame fx =
 
                 Wait d ->
                     ( n + d, xs ++ [ cur ], Frame (percentPerMs * toFloat (n + d)) (frameProps cur) )
+
+                WaitTillComplete d ->
+                    let
+                        dur =
+                            adjustCompleteWait d n
+                    in
+                    ( dur, xs ++ [ cur ], Frame (percentPerMs * toFloat dur) (frameProps cur) )
     in
     List.foldl getFrame ( 0, [], Frame 0 firstFrame ) fx
         |> (\( _, xs, curr ) -> xs ++ [ curr ])
 
 
+frameProps : Frame -> List Property
 frameProps (Frame _ props) =
     props
 
@@ -137,31 +172,12 @@ type alias Millis =
 
 
 
--- Construct
-
-
-animation : Millis -> List Option -> Animation
-animation =
-    Animation
-
-
-
 -- Options
 
 
 delay : Millis -> Option
 delay =
     Delay
-
-
-frames : List Frame -> Option
-frames =
-    Frames
-
-
-frame : Percent -> List Property -> Frame
-frame =
-    Frame
 
 
 loop : Option
