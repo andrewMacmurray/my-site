@@ -9,7 +9,6 @@ module Animation.Animated exposing
 import Animation as Animation exposing (Animation)
 import Element exposing (Element)
 import Html exposing (Html)
-import Html.Attributes
 import Svg exposing (Svg)
 import Svg.Attributes
 
@@ -62,7 +61,7 @@ className =
 
 className_ : Animation -> Html.Attribute msg
 className_ anim =
-    Html.Attributes.class (Animation.name anim)
+    Svg.Attributes.class (Animation.name anim)
 
 
 stylesheet : Animation -> Element msg

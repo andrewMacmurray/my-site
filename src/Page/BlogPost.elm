@@ -68,7 +68,7 @@ getInTouch color title_ =
         , label =
             column [ spacing Scale.medium ]
                 [ Text.text [ Font.color (BlogPost.color color) ] "Have some thoughts? "
-                , Text.text [ Font.color (BlogPost.color color) ] "Let me know in an email"
-                , Mail.icon
+                , Text.text [ Font.color (BlogPost.color color), Font.underline ] "Let me know in an email"
+                , el [] Mail.icon
                 ]
         }

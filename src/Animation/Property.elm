@@ -101,7 +101,7 @@ transform_ props =
             Nothing
 
         transforms ->
-            Just ("transform: " ++ Transform.render transforms)
+            Just ("transform:" ++ Transform.render transforms)
 
 
 collectTransforms : List Property -> List Transform.Transform
@@ -131,7 +131,7 @@ opacity_ : Property -> Maybe String
 opacity_ p =
     case p of
         Opacity n ->
-            Just ("opacity: " ++ String.fromFloat n)
+            Just ("opacity:" ++ String.fromFloat n)
 
         _ ->
             Nothing
@@ -141,7 +141,7 @@ raw_ : Property -> Maybe String
 raw_ p =
     case p of
         Raw k v ->
-            Just (k ++ ": " ++ v)
+            Just (k ++ ":" ++ v)
 
         _ ->
             Nothing
