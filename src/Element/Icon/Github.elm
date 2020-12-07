@@ -1,13 +1,13 @@
 module Element.Icon.Github exposing (large, small)
 
-import Animation exposing (Animation)
-import Animation.Animated as Animated
-import Animation.Property as P
 import Element exposing (Element)
 import Element.Icon as Icon
 import Element.Palette as Palette
+import Simple.Animation as Animation exposing (Animation)
+import Simple.Animation.Property as P
 import Svg exposing (Svg)
 import Svg.Attributes exposing (..)
+import Utils.Animated as Animated
 
 
 small : Element msg
@@ -22,8 +22,10 @@ large =
 
 jump : Animation
 jump =
-    Animation.steps [ Animation.loop ]
-        [ P.y 0 ]
+    Animation.steps
+        { options = [ Animation.loop ]
+        , startAt = [ P.y 0 ]
+        }
         [ Animation.wait 1500
         , Animation.step 50 [ P.y 1 ]
         , Animation.step 200 [ P.y -8 ]

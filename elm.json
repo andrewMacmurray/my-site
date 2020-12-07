@@ -2,7 +2,8 @@
     "type": "application",
     "source-directories": [
         "src",
-        "gen"
+        "gen",
+        "elm-simple-animation/src"
     ],
     "elm-version": "0.19.1",
     "dependencies": {
@@ -20,6 +21,7 @@
             "elm/svg": "1.0.1",
             "elm/time": "1.0.0",
             "elm/url": "1.0.0",
+            "elm/virtual-dom": "1.0.2",
             "elm-community/list-extra": "8.2.4",
             "elm-community/string-extra": "4.0.1",
             "justinmimbs/date": "3.2.1",
@@ -36,7 +38,6 @@
             "elm/parser": "1.1.0",
             "elm/random": "1.0.0",
             "elm/regex": "1.0.0",
-            "elm/virtual-dom": "1.0.2",
             "elm-community/dict-extra": "2.4.0",
             "elm-community/result-extra": "2.4.0",
             "fredcy/elm-parseint": "2.0.1",

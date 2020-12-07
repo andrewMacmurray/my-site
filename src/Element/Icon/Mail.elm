@@ -1,13 +1,13 @@
 module Element.Icon.Mail exposing (icon)
 
-import Animation exposing (Animation)
-import Animation.Animated as Animated
-import Animation.Property as P
 import Element exposing (Element)
 import Element.Icon as Icon
 import Element.Palette as Palette
+import Simple.Animation as Animation exposing (Animation)
+import Simple.Animation.Property as P
 import Svg
 import Svg.Attributes exposing (..)
+import Utils.Animated as Animated
 
 
 icon : Element msg
@@ -22,8 +22,7 @@ icon =
                         , d "M25.5 34.6l19.3-15.3c-.5-.5-1.1-.9-1.8-.9H8c-.7 0-1.3.4-1.7.9l19.2 15.3z"
                         ]
                         []
-                    , Animated.svg openCloseEnvelope
-                        Svg.path
+                    , Animated.path openCloseEnvelope
                         [ fill (Palette.toString Palette.secondaryLight)
                         , fillRule "nonzero"
                         , d "M25.5 4l19.3 15.3c-.5.5-1.1.8-1.8.8H8c-.7 0-1.3-.3-1.7-.8L25.5 4z"
@@ -68,10 +67,9 @@ animateFlyOff =
 flyOff : Animation
 flyOff =
     Animation.steps
-        [ Animation.loop
-        , Animation.zippy
-        ]
-        [ P.x 0, P.opacity 0 ]
+        { options = [ Animation.loop, Animation.zippy ]
+        , startAt = [ P.x 0, P.opacity 0 ]
+        }
         [ Animation.step 500 [ P.opacity 1, P.x 0 ]
         , Animation.wait 3000
         , Animation.step 200 [ P.y -3 ]
@@ -85,10 +83,9 @@ flyOff =
 fadeInLine : Animation.Millis -> Animation
 fadeInLine delay =
     Animation.steps
-        [ Animation.loop
-        , Animation.delay (delay * 200)
-        ]
-        [ P.opacity 0 ]
+        { options = [ Animation.loop, Animation.delay (delay * 200) ]
+        , startAt = [ P.opacity 0 ]
+        }
         [ Animation.wait 700
         , Animation.step 200 [ P.opacity 1 ]
         , Animation.wait 2800
@@ -99,8 +96,10 @@ fadeInLine delay =
 
 letterUpDown : Animation
 letterUpDown =
-    Animation.steps [ Animation.loop, Animation.zippy ]
-        [ P.y 50 ]
+    Animation.steps
+        { options = [ Animation.loop, Animation.zippy ]
+        , startAt = [ P.y 50 ]
+        }
         [ Animation.wait 200
         , Animation.step 800 [ P.y 0 ]
         , Animation.wait 1800
@@ -111,8 +110,10 @@ letterUpDown =
 
 openCloseEnvelope : Animation
 openCloseEnvelope =
-    Animation.steps [ Animation.loop, Animation.zippy ]
-        [ P.scaleXY 1 0 ]
+    Animation.steps
+        { options = [ Animation.loop, Animation.zippy ]
+        , startAt = [ P.scaleXY 1 0 ]
+        }
         [ Animation.step 1000 [ P.scaleXY 1 1 ]
         , Animation.wait 2000
         , Animation.step 1000 [ P.scaleXY 1 0 ]

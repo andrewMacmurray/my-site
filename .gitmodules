@@ -1,0 +1,3 @@
+[submodule "elm-simple-animation"]
+	path = elm-simple-animation
+	url = https://github.com/andrewMacmurray/elm-simple-animation.git

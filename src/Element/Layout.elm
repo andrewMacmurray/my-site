@@ -1,8 +1,5 @@
 module Element.Layout exposing (view)
 
-import Animation
-import Animation.Animated as Animated
-import Animation.Property as P
 import Element exposing (..)
 import Element.Background as Background
 import Element.Border as Border
@@ -18,7 +15,10 @@ import Page exposing (Page)
 import Pages
 import Pages.Directory as Directory exposing (Directory)
 import Pages.PagePath as PagePath exposing (PagePath)
+import Simple.Animation as Animation
+import Simple.Animation.Property as P
 import Site.Contact as Contact
+import Utils.Animated as Animated
 
 
 view :
@@ -110,8 +110,10 @@ dot =
 
 
 expandFade =
-    Animation.fromTo 2000
-        [ Animation.loop ]
+    Animation.fromTo
+        { duration = 2000
+        , options = [ Animation.loop ]
+        }
         [ P.scale 1, P.opacity 1 ]
         [ P.scale 2, P.opacity 0 ]
 
