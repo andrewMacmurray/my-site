@@ -5,6 +5,8 @@ import "../node_modules/highlight.js/styles/a11y-dark.css";
 
 registerLanguage("elm");
 registerLanguage("javascript");
+registerLanguage("sql");
+registerLanguage("kotlin");
 
 function registerLanguage(lang) {
   hljs.registerLanguage(lang, require(`highlight.js/lib/languages/${lang}`));
