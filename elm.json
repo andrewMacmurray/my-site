@@ -2,13 +2,13 @@
     "type": "application",
     "source-directories": [
         "src",
-        "gen",
-        "elm-simple-animation/src"
+        "gen"
     ],
     "elm-version": "0.19.1",
     "dependencies": {
         "direct": {
             "NoRedInk/elm-json-decode-pipeline": "1.0.0",
+            "andrewMacmurray/elm-simple-animation": "1.1.1",
             "avh4/elm-color": "1.0.0",
             "dillonkearns/elm-markdown": "5.1.0",
             "dillonkearns/elm-pages": "7.0.0",

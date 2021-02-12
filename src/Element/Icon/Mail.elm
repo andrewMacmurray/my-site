@@ -67,7 +67,7 @@ animateFlyOff =
 flyOff : Animation
 flyOff =
     Animation.steps
-        { options = [ Animation.loop, Animation.zippy ]
+        { options = [ Animation.loop, Animation.easeOutBack ]
         , startAt = [ P.x 0, P.opacity 0 ]
         }
         [ Animation.step 500 [ P.opacity 1, P.x 0 ]
@@ -97,7 +97,7 @@ fadeInLine delay =
 letterUpDown : Animation
 letterUpDown =
     Animation.steps
-        { options = [ Animation.loop, Animation.zippy ]
+        { options = [ Animation.loop, Animation.easeOutBack ]
         , startAt = [ P.y 50 ]
         }
         [ Animation.wait 200
@@ -111,7 +111,7 @@ letterUpDown =
 openCloseEnvelope : Animation
 openCloseEnvelope =
     Animation.steps
-        { options = [ Animation.loop, Animation.zippy ]
+        { options = [ Animation.loop, Animation.easeOutBack ]
         , startAt = [ P.scaleXY 1 0 ]
         }
         [ Animation.step 1000 [ P.scaleXY 1 1 ]

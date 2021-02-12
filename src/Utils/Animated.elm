@@ -4,8 +4,8 @@ module Utils.Animated exposing
     , path
     )
 
-import Animated
 import Element exposing (Element)
+import Simple.Animated as Animated
 import Simple.Animation exposing (Animation)
 import Svg exposing (Svg)
 import Svg.Attributes
@@ -55,4 +55,4 @@ svg :
     -> List (Svg msg)
     -> Svg msg
 svg =
-    Animated.node Svg.Attributes.class
+    Animated.svg Svg.Attributes.class
