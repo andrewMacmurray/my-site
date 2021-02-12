@@ -7,6 +7,7 @@ module Site exposing
     , description
     , logo
     , name
+    , pageIsPublished
     , tagline
     , titleFor
     , url
@@ -56,6 +57,11 @@ type alias HeadTag =
 titleFor : String -> String
 titleFor page =
     String.toTitleCase (name ++ " - " ++ page)
+
+
+pageIsPublished : Page_ -> Bool
+pageIsPublished =
+    .frontmatter >> Page.isPublished
 
 
 

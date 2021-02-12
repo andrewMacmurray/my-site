@@ -22,9 +22,14 @@ toString pages =
         , url = Site.url ++ "/blog"
         , lastBuildTime = Pages.builtAt
         , generator = Just Site.name
-        , items = List.filterMap metadataToRssItem pages
+        , items = toItems pages
         , siteUrl = Site.url
         }
+
+
+toItems : List Site.Page_ -> List Rss.Item
+toItems =
+    List.filter Site.pageIsPublished >> List.filterMap metadataToRssItem
 
 
 metadataToRssItem : Site.Page_ -> Maybe Rss.Item

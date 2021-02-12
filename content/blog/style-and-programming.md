@@ -2,6 +2,7 @@
 type: blog
 title: Style and programming
 published: 2020-11-22T17:32:08.233Z
+draft: true
 description: Aesthetics of code and why I think it matters
 ---
 

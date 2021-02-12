@@ -54,7 +54,7 @@ layout document page =
 footer : Element msg
 footer =
     row [ width fill, paddingXY Scale.medium Scale.small ]
-        [ Text.label [ Font.color Palette.grey ] "© Andrew MacMurray 2020"
+        [ Text.label [ Font.color Palette.grey ] "© Andrew MacMurray 2021"
         , row
             [ spacing Scale.medium
             , alignRight

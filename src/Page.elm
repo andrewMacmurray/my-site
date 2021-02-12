@@ -1,6 +1,7 @@
 module Page exposing
     ( Page(..)
     , document
+    , isPublished
     )
 
 import Element exposing (Element)
@@ -18,6 +19,16 @@ type Page
     | BlogIndex
     | Home
     | Contact
+
+
+isPublished : Page -> Bool
+isPublished page =
+    case page of
+        BlogPost post ->
+            not post.draft
+
+        _ ->
+            True
 
 
 

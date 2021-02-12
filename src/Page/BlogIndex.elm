@@ -53,7 +53,9 @@ view_ posts =
 
 sortPosts : Site.Metadata -> List BlogPost
 sortPosts =
-    List.filterMap getPost >> List.sortWith dateDescending
+    List.filterMap getPost
+        >> List.sortWith dateDescending
+        >> List.filter (.post >> .draft >> not)
 
 
 type alias BlogPost =

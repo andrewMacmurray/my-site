@@ -2,6 +2,7 @@
 type: blog
 title: Design tricks for non designers
 published: 2020-11-21
+draft: true
 description: Make your website / app look great with a few simple tricks
 ---
 

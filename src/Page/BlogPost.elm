@@ -25,6 +25,7 @@ import Utils.Decode as Decode
 type alias Frontmatter =
     { title : String
     , description : String
+    , draft : Bool
     , published : Date
     }
 
@@ -34,6 +35,7 @@ decoder =
     Decode.succeed Frontmatter
         |> Decode.required "title" Decode.string
         |> Decode.required "description" Decode.string
+        |> Decode.optional "draft" Decode.bool False
         |> Decode.required "published" Decode.date
 
 
