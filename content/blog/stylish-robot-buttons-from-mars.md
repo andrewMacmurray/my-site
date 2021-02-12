@@ -7,7 +7,7 @@ description: An alternative builder pattern for Elm
 
 2 Years ago at [Elm in the Spring conference](https://elminthespring.org/), Brian Hicks gave a fantastic talk about building Buttons ([Robot Buttons from Mars](https://www.youtube.com/watch?v=PDyWP-0H4Zo)).
 
-The idea was that with something extremely configurable like a button (imagine how many different valid combinations of colour, size, icon, fills, hovers you can make for buttons!), a really nice way of controling that complexity is to build up an opaque data structure to represent those options and write small functions that change some of the options. Once you configure that data structure you can render the button from that data structure.
+The idea was that with something extremely configurable like a button (imagine how many valid combinations of colour, size, icon, fills, hovers you can make for buttons!), a really nice way of controlling that complexity is to build up an opaque data structure to represent those options and write small functions to change some options. Once you configure that data structure you can render the button from it.
 
 It's a simple and surprisingly powerful solution - it balances flexibility to customise the button but helps clients configure buttons correctly by restricting what they can do. All with very fashionable pipelines ​💅
 
@@ -131,11 +131,11 @@ toHtml (Button options) =
 
 ```
 
-This is the Haute Coture of view code - REFACTOR EVERYTHING!
+This is the Haute Couture of view code - REFACTOR EVERYTHING!
 
 ![fashion](/images/fashion.png)
 
-I've found this pattern extremely effective in practice (although don't get too lazy with the internal option types as they can get pretty wild over time!). But even Brian has some [misgivings a few years on](https://discourse.elm-lang.org/t/discussion-how-much-to-pipeline/6305/3) - is it too much pipelining?
+I've found this pattern extremely effective in practice (although don't get too lazy with the internal option types as they can get pretty wild over time!). Even Brian has some [misgivings a few years on though](https://discourse.elm-lang.org/t/discussion-how-much-to-pipeline/6305/3) - is it too much pipelining?
 
 One argument is that people are more familiar with the `Html` style of view code - e.g. a function with a list of options and contents
 
