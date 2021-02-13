@@ -7,18 +7,17 @@ description: An unlikely pairing of Postgres, Jackson and Kotlin
 
 SQL databases are amazing. They give you tools to create extremely powerful guarantees about the integrity of your data, evolve that data over time, and ask some pretty complex questions about it with relatively little effort.
 
-```plsql
+```sql
 SELECT
 	sections.title AS section_title,
-	questions.label As question_label,
-	answers.answer,
-	answers.answered_on
+	questions.label AS question_label,
+    questions.category,
+	questions.answer
 	FROM questions
-INNER JOIN answers  ON answers.question_id  = questions.id
 INNER JOIN sections ON questions.section_id = sections.id
 WHERE
 	questions.category = 'BREAD' AND
-	answers.answer ILIKE "%I LOVE%";
+	questions.answer ILIKE "%I LOVE%";
 ```
 
 Using well-structured objects or domain types can also be a pretty nice way of modelling pieces of an application.
