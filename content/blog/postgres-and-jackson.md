@@ -42,10 +42,7 @@ class Question(
 
 Combining the two approaches however is often more awkward than you'd expect. The awkwardness here is that SQL queries produce flat results:
 
-| section_title | question_label           | answer      | answered_on |
-| ------------- | ------------------------ | ----------- | ----------- |
-| Bread Rolls   | Do you love bread rolls? | Absolutely! | 2021-01-05  |
-| Baguettes     | Do you love baguettes?   | YES!!       | 2021-01-06  |
+![table](https://user-images.githubusercontent.com/14013616/107861636-0fae2c80-6e3f-11eb-9aa7-7f3bc510600a.png)
 
 But domain models often have nested structures (e.g. sections contain lists of questions).
 
@@ -157,7 +154,7 @@ INNER JOIN (
             )
         ) json
     FROM questions
-    GROUP BY q.section_id
+    GROUP BY questions.section_id
 ) questions ON questions.section_id = sections.id;
 ```
 
