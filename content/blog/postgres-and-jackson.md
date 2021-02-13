@@ -9,15 +9,15 @@ SQL databases are amazing. They give you tools to create extremely powerful guar
 
 ```sql
 SELECT
-	sections.title AS section_title,
-	questions.label AS question_label,
+    sections.title AS section_title,
+    questions.label AS question_label,
     questions.category,
-	questions.answer
-	FROM questions
+    questions.answer
+FROM questions
 INNER JOIN sections ON questions.section_id = sections.id
 WHERE
-	questions.category = 'BREAD' AND
-	questions.answer ILIKE "%I LOVE%";
+    questions.category = 'BREAD' AND
+    questions.answer ILIKE "%I LOVE%";
 ```
 
 Using well-structured objects or domain types can also be a pretty nice way of modelling pieces of an application.
