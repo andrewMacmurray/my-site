@@ -184,7 +184,7 @@ SELECT
             'title', sections.title,
             'questions', questions.json
         )
-    ) json
+    ) output
 FROM sections
 INNER JOIN ($questions) questions ON questions.section_id = sections.id
 """
@@ -261,7 +261,7 @@ SELECT
         )
     ) json
 FROM questions
-GROUP BY q.section_id
+GROUP BY questions.section_id
 """
 ```
 
