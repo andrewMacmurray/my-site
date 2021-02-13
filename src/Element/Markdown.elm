@@ -128,12 +128,12 @@ unorderedItem (ListItem task children) =
 
 tableBorder : List (Element.Attr () msg)
 tableBorder =
-    [ Border.color Palette.grey
+    [ Border.color Palette.white
     , paddingXY Scale.small Scale.medium
     , Border.width 1
     , Border.solid
     , height fill
-    , Background.color Palette.black
+    , Background.color Palette.lightGrey
     , width fill
     ]
 
