@@ -17,7 +17,7 @@ FROM questions
 INNER JOIN sections ON questions.section_id = sections.id
 WHERE
     questions.category = 'BREAD' AND
-    questions.answer ILIKE "%I LOVE%";
+    questions.answer ILIKE '%I LOVE%';
 ```
 
 Using well-structured objects or domain types can also be a pretty nice way of modelling pieces of an application.
