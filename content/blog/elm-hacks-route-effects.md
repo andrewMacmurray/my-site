@@ -2,6 +2,7 @@
 type: blog
 title: Elm Hacks II - Route Effects
 published: 2021-02-15
+draft: true
 description: Triggering global effects from a link
 ---
 
