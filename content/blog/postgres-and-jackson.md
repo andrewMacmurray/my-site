@@ -7,6 +7,14 @@ description: An unlikely pairing of Postgres, Jackson and Kotlin
 
 SQL databases are amazing. They give you tools to create extremely powerful guarantees about the integrity of your data, evolve that data over time, and ask some pretty complex questions about it with relatively little effort.
 
+As an example let's say we have an application that handles questionnaires:
+
+- Each `Questionnaire` has many `Sections`
+- Each `Section` has many `Questions`
+- Each `Question` can have one `Answer`
+
+We could find all the sections with answers where the person loves bread like this!:
+
 ```sql
 SELECT
     sections.title AS section_title,
@@ -20,7 +28,7 @@ WHERE
     questions.answer ILIKE '%I LOVE%';
 ```
 
-Using well-structured objects or domain types can also be a pretty nice way of modelling pieces of an application.
+At the same time, using well-structured objects or domain types can also be a pretty nice way of modelling pieces of an application.
 
 ```kotlin
 class Section(
@@ -39,11 +47,11 @@ class Question(
 }
 ```
 
-Combining the two approaches however is often more awkward than you'd expect. The awkwardness here is that SQL queries produce flat results:
+Combining the two approaches however is often more awkward than you'd expect. The awkwardness here is that SQL queries produce `flat results`:
 
 ![table](https://user-images.githubusercontent.com/14013616/107861636-0fae2c80-6e3f-11eb-9aa7-7f3bc510600a.png)
 
-But domain models often have nested structures (e.g. sections contain lists of questions).
+But our domain model contains multiple `nested structures` (e.g. questionnaires contain sections, which contain questions).
 
 This mismatch in shape is sometimes called [object relational impedance mismatch](https://en.wikipedia.org/wiki/Object%E2%80%93relational_impedance_mismatch).
 
