@@ -28,7 +28,7 @@ WHERE
     questions.answer ILIKE '%I LOVE%';
 ```
 
-At the same time, using well-structured objects or domain types can also be a pretty nice way of modelling pieces of an application.
+At the same time, using well-structured objects or domain types is also a powerful way of modelling pieces of an application.
 
 ```kotlin
 class Section(
@@ -78,13 +78,13 @@ In my particular case I ran into a few grievances with it:
 
 - The mapping code could be quite awkward and boilerplate heavy - often having to fish out related objects to make a change.
 - Queries with deeply nested objects became very slow, and were very difficult to debug.
-- Magical annotations `@Lazy` `@Eager` for fetching strategies and remembering where to put `@JoinColum` and `@OneToMany` / `@OneToOne` left me scratching my head more often than I'd like to admit!
+- Magical annotations `@Lazy` `@Eager` for fetching strategies and remembering where to put `@JoinColumn` and `@OneToMany` / `@OneToOne` left me scratching my head more often than I'd like to admit.
 
 None of these points were show stoppers, and I'm sure with more time and experience they'd become less painful, but I couldn't help but think - is there a less abstract way to do this?
 
 ## JSON and Jackson
 
-Of the "magical" things you can do in Java / Kotlin, I was surprised by how awesome and painless Jackson's Object mapper was. Given a JSON object like:
+Of the "magical" things you can do in Java / Kotlin, I was surprised by how awesome and painless using Jackson ([A serialisation/deserialisation library for Java](https://github.com/FasterXML/jackson)) was. Given a JSON object like:
 
 ```json
 {
@@ -125,7 +125,7 @@ You can magically convert that JSON into a `Section`:
 jacksonObjectMapper().readValue<Section>(jsonString)
 ```
 
-What's effectively happening is Jackson is taking the name of each object key and matching it with an argument to the constructor of the relevant class.
+What's effectively happening is the Jackson object mapper is taking the name of each object key and matching it with an argument to the constructor of the relevant class.
 
 ## Hasura Graphql Engine
 
