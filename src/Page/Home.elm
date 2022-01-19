@@ -17,8 +17,7 @@ view_ : List (Element msg)
 view_ =
     [ Text.headline [ centerX, paddingEach { edges | top = Scale.large + Scale.extraSmall } ] "Hi I'm Andrew"
     , Text.paragraph []
-        [ Text.tertiaryTitle [] "I'm a software developer working at "
-        , Text.link { url = "https://8thlight.com/", text = "8th Light" }
+        [ Text.tertiaryTitle [] "I'm a freelance software engineer."
         , Text.tertiaryTitle [] ". I love programming, especially "
         , Text.tertiaryTitle Text.bold "functional programming"
         , Text.tertiaryTitle [] ". I'm passionate about "

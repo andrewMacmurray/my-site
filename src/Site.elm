@@ -79,7 +79,7 @@ logo =
 
 url : String
 url =
-    "https://amacmurray.vercel.app"
+    "https://amacmurray.dev"
 
 
 tagline : String
