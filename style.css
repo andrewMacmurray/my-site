@@ -1,0 +1,76 @@
+@import url("https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;500;700&display=swap");
+
+/* Fonts */
+
+:root {
+  --secondary: rgb(255 27 106);
+}
+
+.f1 {
+  font-size: 28px !important;
+}
+
+.f2 {
+  font-size: 24px !important;
+}
+
+.f3 {
+  font-size: 18px !important;
+}
+
+.f4 {
+  font-size: 16px !important;
+}
+
+.f5 {
+  font-size: 16px !important;
+}
+
+.f6 {
+  font-size: 14px !important;
+}
+
+.spacing-override {
+  line-height: calc(1em + 10px) !important;
+}
+
+@media (min-width: 1000px) {
+  .f1 {
+    font-size: 50px !important;
+  }
+
+  .f2 {
+    font-size: 28px !important;
+  }
+
+  .f3 {
+    font-size: 24px !important;
+  }
+
+  .f4 {
+    font-size: 16px !important;
+  }
+
+  .f5 {
+    font-size: 18px !important;
+  }
+
+  .f6 {
+    font-size: 14px !important;
+  }
+
+  .spacing-override {
+    line-height: calc(1em + 20px) !important;
+  }
+}
+
+.bold-override div div {
+  font-weight: bold;
+  color: var(--secondary);
+}
+
+.link-override div div {
+  font-weight: bold;
+  text-decoration: underline;
+  color: var(--secondary);
+}

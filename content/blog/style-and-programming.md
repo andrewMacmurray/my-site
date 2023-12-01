@@ -1,8 +1,8 @@
 ---
 type: blog
 title: Style and programming
-published: 2020-11-22T17:32:08.233Z
-draft: true
+published: "2020-11-22"
+status: draft
 description: Aesthetics of code and why I think it matters
 ---
 
@@ -18,7 +18,7 @@ From wikipedia:
 
 When we speak about code, the word "design" often comes up - we might talk about "software design" or "architecture", e.g. "this api is really nicely designed" or "there's a design flaw at this point in the code".
 
-From the Interaction Design Foundation
+From the Interaction Design Foundation:
 
 > Aesthetics is a core design principle that defines a design’s pleasing qualities. In visual terms, aesthetics includes factors such as balance, color, movement, pattern, scale, shape and visual weight
 

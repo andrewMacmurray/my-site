@@ -1,7 +1,6 @@
 ---
-type: blog
 title: Elm Hacks - Port relays
-published: 2020-11-28
+published: "2020-11-28"
 description: A low fuss global effects pattern
 ---
 

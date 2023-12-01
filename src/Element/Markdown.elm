@@ -6,9 +6,10 @@ import Element.Border as Border
 import Element.Font as Font
 import Element.Input
 import Element.Palette as Palette
-import Element.Scale as Scale exposing (edges)
+import Element.Spacing as Spacing exposing (edges)
 import Element.Text as Text
 import Html
+import Html.Attributes as Attribute
 import Markdown.Block as Block exposing (ListItem(..), Task(..))
 import Markdown.Html
 import Markdown.Parser
@@ -24,7 +25,7 @@ view =
         >> Result.withDefault []
         >> column
             [ width fill
-            , spacingXY 0 Scale.large
+            , spacingXY 0 Spacing.large
             ]
 
 
@@ -32,15 +33,17 @@ renderer : Markdown.Renderer.Renderer (Element msg)
 renderer =
     { heading = heading
     , paragraph = Text.paragraph []
-    , thematicBreak = none
-    , text = Text.text []
+    , blockQuote = blockQuote
+    , html = Markdown.Html.oneOf []
+    , text = Text.text [ Font.color Palette.midGrey ]
+    , codeSpan = code
     , strong = row [ class "bold-override" ]
     , emphasis = row [ Font.italic ]
-    , codeSpan = code
+    , strikethrough = row []
+    , thematicBreak = none
     , link = toLink
     , hardLineBreak = html (Html.br [] [])
     , image = toImage
-    , blockQuote = blockQuote
     , unorderedList = unorderedList
     , orderedList = orderedList
     , codeBlock = codeBlock
@@ -50,15 +53,14 @@ renderer =
     , tableRow = row [ height fill, width fill ]
     , tableHeaderCell = \_ -> paragraph tableBorder
     , tableCell = \_ -> paragraph tableBorder
-    , html = Markdown.Html.oneOf []
     }
 
 
 blockQuote : List (Element msg) -> Element msg
 blockQuote =
     paragraph
-        [ Border.widthEach { edges | left = Scale.small }
-        , padding Scale.medium
+        [ Border.widthEach { edges | left = Spacing.small }
+        , padding Spacing.medium
         , Border.color Palette.black
         , Background.color Palette.lightGrey
         ]
@@ -93,7 +95,7 @@ toImage img =
 
 orderedList : Int -> List (List (Element msg)) -> Element msg
 orderedList i items =
-    column [ spacing Scale.small, paddingEach { edges | left = Scale.small } ] (List.indexedMap (orderedItem i) items)
+    column [ spacing Spacing.small, paddingEach { edges | left = Spacing.small } ] (List.indexedMap (orderedItem i) items)
 
 
 orderedItem : Int -> Int -> List (Element msg) -> Element msg
@@ -103,12 +105,12 @@ orderedItem start i blocks =
 
 unorderedList : List (ListItem (Element msg)) -> Element msg
 unorderedList items =
-    column [ spacing Scale.small ] (List.map unorderedItem items)
+    column [ spacing Spacing.small ] (List.map unorderedItem items)
 
 
 unorderedItem : ListItem (Element msg) -> Element msg
 unorderedItem (ListItem task children) =
-    paragraph [ spacing Scale.small, width fill ]
+    paragraph [ spacing Spacing.small, width fill ]
         [ row [ alignTop, width fill ]
             ((case task of
                 IncompleteTask ->
@@ -129,7 +131,7 @@ unorderedItem (ListItem task children) =
 tableBorder : List (Element.Attr () msg)
 tableBorder =
     [ Border.color Palette.white
-    , paddingXY Scale.small Scale.medium
+    , paddingXY Spacing.small Spacing.medium
     , Border.width 1
     , Border.solid
     , height fill
@@ -143,13 +145,13 @@ heading { level, rawText, children } =
     Text.paragraph []
         [ case level of
             Block.H1 ->
-                Text.headline [] rawText
+                Text.headline [ Font.medium ] rawText
 
             Block.H2 ->
-                Text.title [] rawText
+                Text.title [ Font.medium ] rawText
 
             Block.H3 ->
-                Text.subtitle [] rawText
+                Text.subtitle [ Font.bold ] rawText
 
             _ ->
                 Text.tertiaryTitle [ Font.bold ] rawText
@@ -169,11 +171,25 @@ code snippet =
 
 codeBlock : { body : String, language : Maybe String } -> Element msg
 codeBlock details =
-    paragraph
-        [ Background.color (Element.rgba 0 0 0 0.03)
-        , style "white-space" "pre-wrap"
-        , style "overflow-wrap" "break-word"
-        , style "word-break" "break-word"
-        , class "f6"
+    el
+        [ class "f6"
+        , width fill
+        , Text.headlineFont
         ]
-        [ html (Html.node "hljs-el" [] [ Html.code [] [ Html.text details.body ] ]) ]
+        (html
+            (Html.node "hljs-el"
+                []
+                [ Html.pre
+                    [ Attribute.style "white-space" "pre-wrap"
+                    , Attribute.style "overflow-wrap" "break-word"
+                    , Attribute.style "word-break" "break-word"
+                    ]
+                    [ Html.code
+                        [ Attribute.style "padding" "24px"
+                        , Attribute.style "border-radius" "7px"
+                        ]
+                        [ Html.text details.body ]
+                    ]
+                ]
+            )
+        )

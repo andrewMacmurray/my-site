@@ -1,18 +1,21 @@
 module Element.Text exposing
     ( bodyFont
     , bold
-    , date
     , headline
+    , headlineFont
     , label
     , link
     , link_
+    , logoFont
     , paragraph
+    , published
     , subtitle
     , tertiaryTitle
     , text
     , title
     )
 
+import Content.BlogPost as Blogpost
 import Date exposing (Date)
 import Element exposing (Attribute, Element)
 import Element.Font as Font
@@ -52,7 +55,7 @@ subtitle : List (Attribute msg) -> String -> Element msg
 subtitle attrs content =
     Element.el
         (List.append
-            [ class "f3"
+            [ class "f4"
             , headlineFont
             , Region.heading 3
             ]
@@ -65,7 +68,7 @@ tertiaryTitle : List (Attribute msg) -> String -> Element msg
 tertiaryTitle attrs content =
     Element.el
         (List.append
-            [ class "f4"
+            [ class "f5"
             , headlineFont
             , Font.color Palette.grey
             ]
@@ -91,8 +94,8 @@ label : List (Attribute msg) -> String -> Element msg
 label attrs content =
     Element.el
         (List.append
-            [ bodyFont
-            , Font.size 12
+            [ logoFont
+            , Font.size 14
             ]
             attrs
         )
@@ -119,21 +122,26 @@ bold =
     ]
 
 
-date : List (Element.Attribute msg) -> Date -> Element msg
-date attrs d =
-    subtitle
-        (List.append
-            [ headlineFont
-            , Font.color Palette.black
-            ]
-            attrs
-        )
-        (formatDate d)
+published : List (Element.Attribute msg) -> Blogpost.Status -> Element msg
+published attrs status =
+    case status of
+        Blogpost.Published d ->
+            subtitle
+                (List.append
+                    [ headlineFont
+                    , Font.color Palette.black
+                    ]
+                    attrs
+                )
+                (formatDate d)
+
+        Blogpost.Draft ->
+            text attrs "Draft"
 
 
 formatDate : Date -> String
 formatDate =
-    Date.format "MMM dd . yyyy" >> String.toUpper
+    Date.format "MMM-dd-yyyy" >> String.toUpper
 
 
 paragraph : List (Attribute msg) -> List (Element msg) -> Element msg
@@ -149,14 +157,22 @@ spaced =
 headlineFont : Attribute msg
 headlineFont =
     Font.family
-        [ Font.typeface "Roboto Mono"
-        , Font.typeface "monospace"
+        [ Font.typeface "Source code pro"
+        , Font.monospace
+        ]
+
+
+logoFont : Attribute msg
+logoFont =
+    Font.family
+        [ Font.monospace
         ]
 
 
 bodyFont : Attribute msg
 bodyFont =
     Font.family
-        [ Font.typeface "AbeeZee"
-        , Font.typeface "helvetica"
+        [ Font.typeface "serif"
+        , Font.typeface "times"
+        , Font.typeface "system-ui"
         ]

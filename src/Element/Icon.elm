@@ -4,7 +4,7 @@ module Element.Icon exposing
     )
 
 import Element exposing (el, html, px, width)
-import Element.Scale as Scale
+import Element.Spacing as Spacing
 import Svg exposing (Svg)
 
 
@@ -15,4 +15,4 @@ large =
 
 small : Svg msg -> Element.Element msg
 small =
-    html >> el [ width (px Scale.large) ]
+    html >> el [ width (px Spacing.large) ]

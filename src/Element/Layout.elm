@@ -1,5 +1,6 @@
 module Element.Layout exposing (view)
 
+import Config.Contact as Contact
 import Element exposing (..)
 import Element.Background as Background
 import Element.Border as Border
@@ -8,55 +9,49 @@ import Element.Icon.Github as Github
 import Element.Icon.SmallMail as SmallMail
 import Element.Palette as Palette
 import Element.Region as Region
-import Element.Scale as Scale exposing (edges)
+import Element.Spacing as Spacing exposing (edges)
 import Element.Text as Text
 import Html exposing (Html)
-import Page exposing (Page)
-import Pages
-import Pages.Directory as Directory exposing (Directory)
-import Pages.PagePath as PagePath exposing (PagePath)
-import Simple.Animation as Animation
+import Route
+import Simple.Animation as Animation exposing (Animation)
 import Simple.Animation.Property as P
-import Site.Contact as Contact
+import Time
 import Utils.Animated as Animated
 
 
-view :
-    { title : String, body : List (Element msg) }
-    -> { path : PagePath Pages.PathKey, frontmatter : Page }
-    -> { title : String, body : Html msg }
-view document page =
+view : Time.Posix -> { title : String, body : List (Element msg) } -> { title : String, body : List (Html msg) }
+view time document =
     { title = document.title
-    , body = layout document page
+    , body = [ layout time document ]
     }
 
 
-layout : { a | body : List (Element msg) } -> { b | path : PagePath Pages.PathKey } -> Html msg
-layout document page =
+layout : Time.Posix -> { a | body : List (Element msg) } -> Html msg
+layout time document =
     layoutWrapper
         (column
-            [ width fill, height fill, spacing Scale.large ]
-            [ header page.path
+            [ width fill, height fill, spacing Spacing.large ]
+            [ header
             , column
-                [ paddingEach { edges | left = Scale.medium, right = Scale.medium, bottom = Scale.extraLarge }
-                , spacing Scale.large
+                [ paddingEach { edges | left = Spacing.medium, right = Spacing.medium, bottom = Spacing.extraLarge }
+                , spacing Spacing.large
                 , Region.mainContent
                 , width (fill |> maximum 800)
                 , height fill
                 , centerX
                 ]
                 [ pageWrapper document.body ]
-            , footer
+            , footer time
             ]
         )
 
 
-footer : Element msg
-footer =
-    row [ width fill, paddingXY Scale.medium Scale.small ]
-        [ Text.label [ Font.color Palette.grey ] "© Andrew MacMurray 2022"
+footer : Time.Posix -> Element msg
+footer time =
+    row [ width fill, paddingXY Spacing.medium Spacing.small ]
+        [ Text.label [ Font.color Palette.grey ] (viewCopyright time)
         , row
-            [ spacing Scale.medium
+            [ spacing Spacing.medium
             , alignRight
             , alignBottom
             ]
@@ -66,10 +61,20 @@ footer =
         ]
 
 
+viewCopyright : Time.Posix -> String
+viewCopyright time =
+    "© Andrew MacMurray " ++ viewYear time
+
+
+viewYear : Time.Posix -> String
+viewYear =
+    Time.toYear Time.utc >> String.fromInt
+
+
 pageWrapper : List (Element msg) -> Element msg
 pageWrapper =
     column
-        [ spacing Scale.extraLarge
+        [ spacing Spacing.extraLarge
         , centerX
         ]
 
@@ -83,19 +88,25 @@ layoutWrapper =
         ]
 
 
-header : PagePath Pages.PathKey -> Element msg
-header currentPath =
+header : Element msg
+header =
     column [ width fill ]
         [ row
-            [ padding Scale.medium
+            [ padding Spacing.medium
             , spaceEvenly
             , width fill
             , Region.navigation
             ]
             [ link [] { url = "/", label = dot }
-            , row [ spacing Scale.medium ]
-                [ highlightableLink currentPath Pages.pages.blog.directory "blog"
-                , highlightableLink_ currentPath Pages.pages.contact "contact"
+            , row [ spacing Spacing.medium ]
+                [ withHighlight False
+                    { url = Route.toString Route.Blog
+                    , label = Text.subtitle [] "Blog"
+                    }
+                , withHighlight False
+                    { url = Route.toString Route.Contact
+                    , label = Text.subtitle [] "Contact"
+                    }
                 ]
             ]
         ]
@@ -103,12 +114,13 @@ header currentPath =
 
 dot : Element msg
 dot =
-    row [ spacing Scale.extraSmall ]
-        [ el [] (text "a")
+    row [ spacing Spacing.extraSmall ]
+        [ el [ Text.logoFont ] (text "a")
         , el [ inFront (Animated.el expandFade [] dot_) ] dot_
         ]
 
 
+expandFade : Animation
 expandFade =
     Animation.fromTo
         { duration = 2000
@@ -123,30 +135,32 @@ dot_ =
     el
         [ Background.color Palette.black
         , Border.rounded 1000
-        , width (px Scale.medium)
-        , height (px Scale.medium)
+        , width (px Spacing.medium)
+        , height (px Spacing.medium)
         ]
         none
 
 
-highlightableLink_ : PagePath a -> PagePath b -> String -> Element msg
-highlightableLink_ current path label =
-    withHighlight (PagePath.toString path == PagePath.toString current)
-        { url = PagePath.toString path
-        , label = Text.subtitle [ Font.color Palette.black ] label
-        }
 
-
-highlightableLink : PagePath Pages.PathKey -> Directory Pages.PathKey Directory.WithIndex -> String -> Element msg
-highlightableLink currentPath linkDirectory displayName =
-    let
-        isHighlighted =
-            Directory.includes linkDirectory currentPath
-    in
-    withHighlight isHighlighted
-        { url = linkDirectory |> Directory.indexPath |> PagePath.toString
-        , label = Text.subtitle [ Font.color Palette.black ] displayName
-        }
+--highlightableLink_ : PagePath a -> PagePath b -> String -> Element msg
+--highlightableLink_ current path label =
+--    withHighlight (PagePath.toString path == PagePath.toString current)
+--        { url = PagePath.toString path
+--        , label = Text.subtitle [ Font.color Palette.black ] label
+--        }
+--
+--
+--highlightableLink : PagePath Pages.PathKey -> Directory Pages.PathKey Directory.WithIndex -> String -> Element msg
+--highlightableLink currentPath linkDirectory displayName =
+--    let
+--        isHighlighted =
+--            Directory.includes linkDirectory currentPath
+--    in
+--    withHighlight isHighlighted
+--        { url = linkDirectory |> Directory.indexPath |> PagePath.toString
+--        , label = Text.subtitle [ Font.color Palette.black ] displayName
+--        }
+--
 
 
 withHighlight : Bool -> { url : String, label : Element msg } -> Element msg

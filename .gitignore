@@ -1,12 +1,7 @@
 node_modules/
 elm-stuff/
 dist/
-.cache/
-gen/
-.idea
-.env
+.elm-pages/
+functions/render/elm-pages-cli.js
 
-.spago
-output
-.psc-ide-port
-.purs-repl
+codegen/Gen

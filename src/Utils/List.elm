@@ -1,6 +1,8 @@
-module Utils.List exposing (findFirst)
+module Utils.List exposing (asArray)
+
+import Array exposing (Array)
 
 
-findFirst : (a -> Bool) -> List a -> Maybe a
-findFirst matching =
-    List.filter matching >> List.head
+asArray : (Array a -> Array b) -> List a -> List b
+asArray f =
+    Array.fromList >> f >> Array.toList
