@@ -36,7 +36,7 @@ type alias BlogPost =
 
 
 type Status
-    = Draft
+    = Draft Date
     | Published Date
 
 
@@ -72,8 +72,8 @@ publishedDate { status } =
         Published date ->
             date
 
-        _ ->
-            Date.fromRataDie 1
+        Draft date ->
+            date
 
 
 
@@ -134,8 +134,18 @@ filterDrafts blogposts =
                         blogposts
 
                     _ ->
-                        List.filter (\post -> post.metadata.status /= Draft) blogposts
+                        List.filter (.metadata >> isPublished) blogposts
             )
+
+
+isPublished : Metadata -> Bool
+isPublished meta =
+    case meta.status of
+        Draft _ ->
+            False
+
+        Published _ ->
+            True
 
 
 withColor : Int -> Metadata -> Metadata
@@ -204,12 +214,12 @@ statusDecoder : Decoder Status
 statusDecoder =
     Decode.map2
         (\published status_ ->
-            case ( published, status_ ) of
-                ( _, Just "draft" ) ->
-                    Draft
+            case status_ of
+                Just "draft" ->
+                    Draft published
 
-                ( date, _ ) ->
-                    Published date
+                _ ->
+                    Published published
         )
         (Decode.field "published"
             (Decode.map

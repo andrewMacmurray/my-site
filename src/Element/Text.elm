@@ -135,8 +135,15 @@ published attrs status =
                 )
                 (formatDate d)
 
-        Blogpost.Draft ->
-            text attrs "Draft"
+        Blogpost.Draft d ->
+            subtitle
+                (List.append
+                    [ headlineFont
+                    , Font.color Palette.black
+                    ]
+                    attrs
+                )
+                ("DRAFT: " ++ formatDate d)
 
 
 formatDate : Date -> String
